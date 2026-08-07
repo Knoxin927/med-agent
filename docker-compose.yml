@@ -1,0 +1,118 @@
+# 固定 Compose 项目名；它会影响容器、网络和命名卷的实际名称。
+name: med-agent
+
+# services 是本次需要由 Docker Compose 管理的服务集合。
+services:
+  # api 是运行现有 FastAPI 健康检查的应用服务；本阶段不连接数据库或 Redis。
+  api:
+    # 根据当前目录的 Dockerfile 构建 API 镜像。
+    build: .
+    # 只有 PostgreSQL 和 Redis 都通过自身健康检查后才启动 API 容器。
+    depends_on:
+      # postgres 的 healthy 状态只控制 API 启动顺序，不代表 API 已使用数据库。
+      postgres:
+        condition: service_healthy
+      # redis 的 healthy 状态只控制 API 启动顺序，不代表 API 已使用缓存。
+      redis:
+        condition: service_healthy
+    # environment 将 M1.4 的运行配置传入容器，不把 .env 复制进镜像。
+    environment:
+      # 默认直连 DeepSeek；如需私有代理，可在未跟踪的 .env 设置 DOCKER_LLM_BASE_URL 覆盖它。
+      LLM_BASE_URL: ${DOCKER_LLM_BASE_URL:-https://api.deepseek.com}
+      # 使用用户确认的 DeepSeek 快速模型。
+      LLM_MODEL: ${LLM_MODEL:-deepseek-v4-flash}
+      # 仅在运行容器时从未跟踪的 .env 注入真实密钥。
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      # 传入可调的上游超时秒数。
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-120}
+      # 容器内默认 Chroma 路径；真实 RAG 容器部署的只读数据挂载留待后续阶段。
+      RAG_CHROMA_PATH: ${RAG_CHROMA_PATH:-data/chroma}
+      # 显式传入 M2.5 已确认的 dense-only 聊天策略，容器不能隐式接入实验方法。
+      RETRIEVAL_METHOD: ${RETRIEVAL_METHOD:-dense}
+    # 使用显式端口字段，将容器内 API 端口限制为仅本机访问。
+    ports:
+      # target 是 Uvicorn 在容器内监听的端口。
+      - target: 8000
+        # published 是本机访问 API 时使用的端口。
+        published: "8000"
+        # host_ip 限制 API 不暴露给局域网。
+        host_ip: 127.0.0.1
+        # protocol 指定 HTTP 所承载的 TCP 协议。
+        protocol: tcp
+    # healthcheck 用 Python 标准库请求自身的健康检查接口，不依赖镜像中不存在的 curl。
+    healthcheck:
+      # urllib 请求失败或收到非 200 时会退出非零，从而让 Compose 判定 API 不健康。
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; response = urlopen('http://127.0.0.1:8000/health'); assert response.status == 200"]
+      # 每隔 5 秒检查一次 API。
+      interval: 5s
+      # 单次 API 健康检查最多等待 5 秒。
+      timeout: 5s
+      # 最多连续失败 12 次，给 API 约一分钟完成启动。
+      retries: 12
+
+  # postgres 是 PostgreSQL 数据库服务的名字，后续命令会用这个名字定位容器。
+  postgres:
+    # 指定使用 PostgreSQL 官方镜像的 16 主版本，避免 latest 标签未来发生不兼容变化。
+    image: postgres:16
+    # environment 向 PostgreSQL 容器传入初始化所需的环境变量。
+    environment:
+      # 创建时使用的数据库名；后续应用会连接这个数据库。
+      POSTGRES_DB: med_agent
+      # 创建时使用的数据库用户名；本学习项目固定为 med_agent。
+      POSTGRES_USER: med_agent
+      # 从未跟踪的 .env 文件读取密码；变量缺失时 Compose 会停止并显示提示，避免空密码启动。
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    # ports 使用显式字段把容器内部端口映射到本机，便于清楚声明固定端口和仅本机访问的限制。
+    ports:
+      # target 是 PostgreSQL 在容器内监听的端口。
+      - target: 5432
+        # published 是本机对外提供的固定端口；当前环境无法稳定占用 5432，因此改用空闲的 5433。
+        published: "5433"
+        # host_ip 限制只有本机能访问，不把开发数据库暴露给局域网。
+        host_ip: 127.0.0.1
+        # protocol 指定端口使用 TCP 协议。
+        protocol: tcp
+    # volumes 把需要长期保留的数据存到命名卷，而不是容器的临时文件系统。
+    volumes:
+      # 将 postgres_data 挂载到 PostgreSQL 默认数据目录，删除容器后数据仍能保留。
+      - postgres_data:/var/lib/postgresql/data
+    # healthcheck 定义 Compose 判断 PostgreSQL 是否真正可用的规则。
+    healthcheck:
+      # CMD-SHELL 在容器 shell 中执行 pg_isready；$${...} 让变量在容器内展开，避免 Compose 读取它们。
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      # 每隔 5 秒执行一次健康检查。
+      interval: 5s
+      # 单次健康检查最多等待 5 秒，超过后视为本次检查失败。
+      timeout: 5s
+      # 最多连续失败 12 次；配合 5 秒间隔，给数据库约一分钟完成初始化。
+      retries: 12
+
+  # redis 是 Redis 内存键值服务的名字，后续命令会用它定位容器。
+  redis:
+    # 指定使用 Redis 官方镜像的 7 主版本，避免 latest 标签未来发生不兼容变化。
+    image: redis:7
+    # ports 把容器内部端口以显式字段映射到本机，避免不必要地暴露给局域网。
+    ports:
+      # target 是 Redis 在容器内监听的端口。
+      - target: 6379
+        # published 是本机对外提供的固定端口。
+        published: "6379"
+        # host_ip 限制只有本机能访问，不把开发缓存暴露给局域网。
+        host_ip: 127.0.0.1
+        # protocol 指定端口使用 TCP 协议。
+        protocol: tcp
+    # healthcheck 定义 Compose 判断 Redis 是否真正可用的规则。
+    healthcheck:
+      # CMD 直接执行 redis-cli ping；Redis 正常时会返回 PONG。
+      test: ["CMD", "redis-cli", "ping"]
+      # 每隔 5 秒执行一次健康检查。
+      interval: 5s
+      # 单次健康检查最多等待 5 秒，超过后视为本次检查失败。
+      timeout: 5s
+      # 最多连续失败 12 次；配合 5 秒间隔，给 Redis 约一分钟完成初始化。
+      retries: 12
+
+# volumes 声明本 Compose 项目使用的命名数据卷集合。
+volumes:
+  # 定义 PostgreSQL 数据卷；Compose 会将其命名为 med-agent_postgres_data。
+  postgres_data:
