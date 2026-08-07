@@ -24,7 +24,7 @@ chroma["Chroma 向量库 app/rag/vector_store.py"]
 llm["OpenAI-compatible LLM 客户端 app/llm/client.py"]
 agent["Agent 工具循环 app/agent/loop.py"]
 tools["工具运行时 app/agent/tool_runtime.py"]
-graph["LangGraph 状态机 app/agent/types.py"]
+state_graph["LangGraph 状态机 app/agent/types.py"]
 approval["人工批准 app/agent/approval/"]
 mcp["MCP knowledge stdio app/mcp/"]
 eval["离线评测 app/evaluation/"]
@@ -37,7 +37,7 @@ api -->|Agent API| agent
 dense --> embed --> chroma
 api --> sse --> llm
 agent --> tools
-agent --> graph
+agent --> state_graph
 agent --> approval --> pg
 tools -->|authority_search| mcp
 api -.受限观测.-> obsrv
