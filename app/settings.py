@@ -19,7 +19,7 @@ DEFAULT_LLM_BASE_URL = "https://api.deepseek.com"
 # 保存用户确认的 DeepSeek 快速模型 ID。
 DEFAULT_LLM_MODEL = "deepseek-v4-flash"
 # 保存 M2.5 已确认的聊天默认与回滚检索方法。
-DEFAULT_RETRIEVAL_METHOD = "dense"
+DEFAULT_RETRIEVAL_METHOD = "hybrid"
 # 固定本项目的根目录，避免从终端当前目录误加载其他工具的 .env。
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 # 本文件是医疗 Agent 唯一允许读取的本地运行时环境配置。
@@ -44,7 +44,7 @@ class AppSettings:
     llm_timeout_seconds: float
     # 保存本机 Chroma 的持久化目录。
     rag_chroma_path: Path
-    # 保存通过验证的聊天检索方法，本阶段仅允许 dense。
+    # 保存通过验证的聊天检索方法，M7 实测后仅允许 hybrid。
     retrieval_method: str
 
 
@@ -78,7 +78,7 @@ def load_settings() -> AppSettings:
         api_key = os.getenv("LLM_API_KEY", "").strip()
         # 读取超时字符串，默认使用当前中转站允许的 120 秒。
         timeout_text = os.getenv("LLM_TIMEOUT_SECONDS", "120").strip()
-        # 容器或 CI 没有项目 .env 时可显式注入唯一允许的 dense 配置。
+        # 容器或 CI 没有项目 .env 时可显式注入唯一允许的 hybrid 配置。
         retrieval_method = os.getenv("RETRIEVAL_METHOD", DEFAULT_RETRIEVAL_METHOD).strip()
     # 读取 Chroma 路径，默认与既有 M1.2 目录一致。
     chroma_path = Path(os.getenv("RAG_CHROMA_PATH", "data/chroma"))
@@ -90,7 +90,7 @@ def load_settings() -> AppSettings:
         raise SettingsError("LLM_MODEL 不能为空")
     # 空白或未批准实验策略都不能进入生产聊天链路。
     if retrieval_method != DEFAULT_RETRIEVAL_METHOD:
-        raise SettingsError("RETRIEVAL_METHOD 仅允许 dense")
+        raise SettingsError("RETRIEVAL_METHOD 仅允许 hybrid")
     # 缺密钥时必须在网络访问前失败。
     if not api_key or api_key.startswith("<"):
         raise SettingsError("缺少 LLM_API_KEY 配置")

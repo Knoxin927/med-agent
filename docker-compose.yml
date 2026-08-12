@@ -27,8 +27,8 @@ services:
       LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-120}
       # 容器内默认 Chroma 路径；真实 RAG 容器部署的只读数据挂载留待后续阶段。
       RAG_CHROMA_PATH: ${RAG_CHROMA_PATH:-data/chroma}
-      # 显式传入 M2.5 已确认的 dense-only 聊天策略，容器不能隐式接入实验方法。
-      RETRIEVAL_METHOD: ${RETRIEVAL_METHOD:-dense}
+      # 显式传入 M7 已确认的 hybrid 聊天策略，容器不能隐式接入未批准实验方法。
+      RETRIEVAL_METHOD: ${RETRIEVAL_METHOD:-hybrid}
     # 使用显式端口字段，将容器内 API 端口限制为仅本机访问。
     ports:
       # target 是 Uvicorn 在容器内监听的端口。

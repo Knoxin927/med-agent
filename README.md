@@ -6,8 +6,8 @@
 
 - 工程边界：检索语料均为通用医学常识文本（如高血压日常管理、运动与饮食），不接入真实病例与个体身份信息，不输出特定医学指令。
 - 能力声明边界：本项目自称的是"工程能力"而非"医学正确性"。任何架构或指标数字均不做临床效果或诊断能力宣称。
-- 部署边界：本地学习用途，未对外部署；未做安全鉴权、未接真实上游 LLM provider；M5 离线评测均为合成工程证据（synthetic-only），其 owner gate 仍 pending。
-- 失败优先：所有受控能力默认安全失败。MCP authority_search 在生产失败时 fail-closed，缓存默认旁路，dense 为聊天唯一允许的检索策略。
+- 部署边界：本地学习用途，未对外部署；未做安全鉴权。受限真实 Provider Agent 评测仅在项目所有者批准和调用上限内执行，结果保留脱敏报告；M5 离线评测仍为合成工程证据（synthetic-only）。
+- 失败优先：所有受控能力默认安全失败。MCP authority_search 在生产失败时 fail-closed，缓存默认旁路，hybrid 为聊天唯一允许的检索策略（dense 仍作离线对照）。
 
 ## 2. 架构
 
@@ -18,7 +18,7 @@ flowchart LR
 req["HTTP 请求 /chat/stream、Agent API"]
 api["FastAPI 应用工厂 app/main.py"]
 sse["SSE 编码 app/rag/answering.py"]
-dense["dense 检索策略 app/retrieval_strategies/dense.py"]
+hybrid["hybrid 检索策略 app/retrieval_strategies/hybrid.py"]
 embed["BGE-M3 Embedding app/rag/embedding.py"]
 chroma["Chroma 向量库 app/rag/vector_store.py"]
 llm["OpenAI-compatible LLM 客户端 app/llm/client.py"]
@@ -32,24 +32,24 @@ obsrv["可观测性 app/observability/"]
 pg["Postgres checkpoint migrations/"]
 
 req --> api
-api -->|固定 RAG| dense
+api -->|固定 RAG| hybrid
 api -->|Agent API| agent
-dense --> embed --> chroma
+hybrid --> embed --> chroma
 api --> sse --> llm
 agent --> tools
 agent --> state_graph
 agent --> approval --> pg
 tools -->|authority_search| mcp
 api -.受限观测.-> obsrv
-eval --> dense
+eval --> hybrid
 eval --> agent
 eval --> mcp
 ```
 
 可回链证据（公开候选导出范围内的源码与测试）：
 
-- FastAPI 应用与 SSE 路由：[app/main.py](app/main.py)；测试位于 tests/test_chat_stream.py（公开候选是否随 tests/ 导出由 allowlist 决定）
-- dense 检索与 Chroma 持久化：[app/retrieval_strategies/dense.py](app/retrieval_strategies/dense.py)、[app/rag/vector_store.py](app/rag/vector_store.py)；测试位于 tests/test_retrieval_store.py、tests/test_vector_store.py（公开候选是否随 tests/ 导出由 allowlist 决定）
+- FastAPI 应用与 SSE 路由：[app/main.py](app/main.py)；公开候选提供最小契约测试：[tests/contract/test_public_contract.py](tests/contract/test_public_contract.py)
+- hybrid 检索（dense+BM25 RRF）与 Chroma 持久化：[app/retrieval_strategies/hybrid.py](app/retrieval_strategies/hybrid.py)、[app/retrieval_strategies/dense.py](app/retrieval_strategies/dense.py)、[app/rag/vector_store.py](app/rag/vector_store.py)；测试位于 tests/test_retrieval_store.py、tests/test_vector_store.py（公开候选是否随 tests/ 导出由 allowlist 决定）
 - Embedding：[app/rag/embedding.py](app/rag/embedding.py)；测试位于 tests/test_embedding.py（公开候选是否随 tests/ 导出由 allowlist 决定）
 - Agent 工具循环与状态：[app/agent/loop.py](app/agent/loop.py)、[app/agent/types.py](app/agent/types.py)
 - 人工批准与 checkpoint：[app/agent/approval/](app/agent/approval)、migrations/（agent_runs、agent_approvals SQL 迁移；公开候选是否纳入由 allowlist 决定）
@@ -61,43 +61,63 @@ eval --> mcp
 
 所有命令均为本地命令，不触达任何外部部署或真实上游 provider。
 
-```bash
-# 1) 创建并激活虚拟环境（项目锁定 Python 3.12）
-py -3.12 -m venv .venv
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-# macOS / Linux
-# source .venv/bin/activate
+**工作目录硬前置**：下列命令必须在包含 `docker-compose.yml`、`app/`、`scripts/` 的 `med-agent` 项目根执行。若当前目录不是项目根，会出现：
 
-# 2) 安装依赖
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
+- `docker compose`: `no configuration file provided: not found`
+- `uvicorn app.main:app`: `ModuleNotFoundError: No module named 'app'`
+- `python scripts/...`: `can't open file '...\scripts\....py'`
 
-# 3) 配置本机密钥（.env 不入库、不进入公开候选）
-# 私有副本可使用 `.env.example` 模板；公开候选不导出该模板，请自行新建空 .env 并填入仅供本机使用的真实密钥。
+这些不是服务本身损坏，先进入项目根再继续。
 
-# 4) 启动本地 API（默认端口 8000）
-uvicorn app.main:app --reload
+```powershell
+# 0) 先在终端进入 clone 后的 med-agent 项目根；务必先做这一步
+Test-Path .\docker-compose.yml   # 必须为 True
+Test-Path .\app\main.py          # 必须为 True
 
-# 5) 最小健康检查（无需密钥也属受控 from-first-request 加载）
+# 1) 使用项目虚拟环境（本仓库演示环境名为 .venv-m1-2；也可自建 .venv）
+$py = ".\.venv-m1-2\Scripts\python.exe"
+# 若没有现成 venv：
+# py -3.12 -m venv .venv
+# $py = ".\.venv\Scripts\python.exe"
+# & $py -m pip install -r requirements.txt
+# & $py -m pip install -r requirements-dev.txt
+
+# 2) 配置本机密钥（.env 不入库、不进入公开候选）
+# 私有副本可参考 `.env.example`；公开候选不导出该模板。
+
+# 3) 启动依赖与本机 API（SSE smoke 用本机 uvicorn + 本机 Chroma，不要依赖 Docker api）
+docker compose up -d postgres redis
+& $py -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+# 4) 另开一个已位于项目根的终端做健康检查
 curl http://127.0.0.1:8000/health
 
-# 6) 运行测试（tests/ 仅在私有副本可见，公开候选不导出；公开 clone 此步无项可跑，请跳过）
-# pytest
+# 5) 最小真实 SSE 演示（脱敏输出，不含完整回答）
+& $py scripts\prepare_streaming_smoke_data.py
+& $py scripts\smoke_streaming_answer.py
+
+# 6) 可选：MCP smoke（record 放仓库外；PowerShell 不要粘贴尖括号占位符）
+# $record = Join-Path $env:TEMP ("med-agent-mcp-record-" + [guid]::NewGuid().ToString("N") + ".json")
+# & $py scripts\run_mcp_client_smoke.py --record $record
+
+# 7) 公开 clone 的离线契约测试（不读 .env，不触发网络）
+& $py -m pytest tests/contract -q
 ```
 
 执行说明：
 
+- 先进入项目根；不要在其他目录直接复制执行 compose/uvicorn/scripts。
 - API 在首次 /chat/stream 或 Agent 请求前不会读取密钥或加载模型，避免任何启动期网络行为。
 - 真实 LLM 调用依赖 .env 中的 LLM_API_KEY；缺密钥会在网络访问前以 503 失败，绝不打印或回显密钥。
 - 测试默认使用 falsified 检索与 LLM，可在不联网、无真实密钥状态下完整运行。
-- 公开候选不导出 tests/ 与 .env.example，故 `pytest` 与 `cp .env.example .env` 仅在私有副本可运行；本 README 已在对应命令段标注该差异。
+- 公开候选只导出 `tests/contract/`；它验证 fixture、评测 schema 与基础切片，不替代私有副本中的完整测试与正式评测。
+- PowerShell 中 `--record` 后必须是真实路径字符串，不能原样粘贴 `<仓库外路径>`。
 
 ## 4. 能力矩阵与失败边界
 
 | 能力 | 实现位置 | 失败/边界 |
 | --- | --- | --- |
-| 固定 RAG（dense） | [app/retrieval_strategies/dense.py](app/retrieval_strategies/dense.py) | 聊天唯一允许的检索策略；RETRIEVAL_METHOD != dense 会在 SettingsError 拒绝 |
+| 固定 RAG（hybrid） | [app/retrieval_strategies/hybrid.py](app/retrieval_strategies/hybrid.py) | 聊天唯一允许的检索策略；RETRIEVAL_METHOD != hybrid 会在 SettingsError 拒绝 |
 | SSE 流式问答 | [app/rag/answering.py](app/rag/answering.py) | 未命中候选时不伪造 sources；上游缺失返回 error 帧 |
 | Agent 工具循环 | [app/agent/loop.py](app/agent/loop.py) | 工具异常 fail-closed，run 失败为可恢复状态而非伪成功 |
 | LangGraph 状态机 | [app/agent/types.py](app/agent/types.py) | 状态边界由不可变 dataclass 强制 |
@@ -110,7 +130,7 @@ curl http://127.0.0.1:8000/health
 | 成本统计 | [app/evaluation/cost/](app/evaluation/cost) | known_cost_sum 仅合成价格基准；summary_amount 未公开 |
 | 公开候选导出 | app/public_export/ | allowlist 显式包含；二进制默认拒绝；扫描命中即 fail-closed |
 
-离线检索方法（hybrid / dense-rerank / rewrite-dense）保留为显式离线评测接口，不进入生产聊天链路；已冻结的离线决策见私有仓库 evaluation/decisions/m2-retrieval-decision-v2.json。
+M7 后聊天默认 hybrid；dense / dense-rerank / rewrite-dense 仍保留为显式离线评测接口。历史 v1 决策见 evaluation/decisions/m2-retrieval-decision-v2.json；v2 实测见 evaluation/reports/hybrid-v2-review-candidate-fixed-f5c186148512-fdc09986-20260812T052633Z/。
 
 ## 5. 指标表
 
@@ -128,7 +148,7 @@ curl http://127.0.0.1:8000/health
 | 缓存 default_bypass | True（运行时默认） | M5.4 冻结 manifest | 同上 | 候选（设计合规项，非性能数字） |
 | 成本 known_cost_sum | synthetic-only（未公开） | M5.5 synthetic 价格表 | evaluation/reports/m5-cost-v1-synthetic-demo/summary.md | 否 |
 | M5 总体生产接入 | synthetic-only，owner gate pending | M5.6 五线汇总 | evaluation/reports/m5-closure-v1-synthetic-demo/summary.md | 否 |
-| M2 决策 selected_method | dense（设计冻结） | 24 case 离线 + 在线证据 | evaluation/decisions/m2-retrieval-decision-v2.json | 候选（设计结论，非性能数字） |
+| M7 决策 selected_method | hybrid（v2 fixed 实测） | 164 case；Recall@5 0.9486 / MRR@10 0.8392 | evaluation/reports/hybrid-v2-review-candidate-fixed-f5c186148512-fdc09986-20260812T052633Z/ | 是（检索质量） |
 | M2 rewrite-dense 额外 P50 | synthetic-only（未公开） | 在线测量，环境不统一 | 同上 | 否 |
 
 不在表中的维度统一视为"未公开/未核验"。任何把上述数值改写为生产级性能、质量、缓存或成本主张的写法均与本项目证据边界冲突。
@@ -142,6 +162,9 @@ curl http://127.0.0.1:8000/health
 ```text
 med-agent/
 ├── app/                      # 应用源码：API、rag、agent、retrieval_strategies、mcp、observability、evaluation、settings、llm
+├── fixtures/public/          # 非敏感文本 fixture 与评测 schema
+├── tests/contract/           # 可离线运行的最小公开契约测试
+├── docs/PUBLIC_REPRODUCIBILITY.md
 ├── requirements.txt          # 运行时依赖固定版本
 ├── requirements-dev.txt      # 开发与测试依赖
 ├── Dockerfile                # 本地容器构建
@@ -159,11 +182,12 @@ med-agent/
 ### 6.3 复现限制
 
 - M5 全部报告为 synthetic-only，owner gate pending；不可作为生产指标复现。
-- 真实 provider 调用未授权；online rewrite 测量结果存在环境指纹不统一，不参与速度排序。
-- hybrid、dense-rerank、rewrite-dense 保留为离线评测，不接入生产聊天链路；如需复现，须重新冻结评测输入并按私有仓库 evaluation 工件执行。
+- 真实 provider 调用只在项目所有者明确授权、调用上限和脱敏审计下执行；online rewrite 测量结果存在环境指纹不统一，不参与速度排序。
+- dense-rerank、rewrite-dense 仍保留为离线评测；hybrid 已接入生产聊天默认。如需复现，须使用 v2 fixed manifest/confirmation 与对应 reports。
+- 公开 clone 可按 [PUBLIC_REPRODUCIBILITY.md](docs/PUBLIC_REPRODUCIBILITY.md) 运行最小 fixture 与 contract tests；它不是完整数据和正式指标的替代品。
 
 ### 6.4 许可与依赖声明
 
-- 项目源码许可证由项目所有者确认后再写入；公开候选导出前的脱敏与许可复核由用户逐条确认，本 README 不作法律结论。
+- 项目源码许可证为根目录 [MIT License](LICENSE)；它不覆盖 MedlinePlus 原始资料，公开候选导出前仍需逐条完成脱敏与来源条款复核。
 - 第三方依赖许可证按 [requirements.txt](requirements.txt) 与 [requirements-dev.txt](requirements-dev.txt) 逐项复核；关键直接依赖包括 FastAPI、Uvicorn、sentence-transformers、ChromaDB、httpx、python-dotenv、LangGraph、psycopg、mcp、sse-starlette。
 - 本 README 不嵌入追踪像素、徽章或外部未核验链接；架构图使用仓库内可审计的 Mermaid 源码。

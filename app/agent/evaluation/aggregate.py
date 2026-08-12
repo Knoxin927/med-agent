@@ -68,6 +68,12 @@ def aggregate_agent_details(details: list[AgentTaskDetail]) -> dict[str, Any]:
         "illegal_tool_leaks": sum(item.illegal_tool_leaks for item in details),
         "unresolved_unknown_outcomes": sum(item.unresolved_unknown_outcomes for item in details),
     }
+    failure_categories: dict[str, int] = {}
+    for item in details:
+        if item.task_success:
+            continue
+        reason = str(item.grade_evidence.get("reason", "unclassified"))
+        failure_categories[reason] = failure_categories.get(reason, 0) + 1
     return {
         "shared": _layer_metrics(shared),
         "agent_only": {
@@ -80,5 +86,6 @@ def aggregate_agent_details(details: list[AgentTaskDetail]) -> dict[str, Any]:
             "approval_resume_success_rate": _rate(approval_resumes, approval_requests),
         },
         "safety_gates": safety,
+        "failure_categories": dict(sorted(failure_categories.items())),
         "total_detail_count": len(details),
     }

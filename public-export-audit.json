@@ -1,0 +1,1018 @@
+{
+  "audit_scope": "仅扫描 manifest.entries 中的待发布内容；本地审计附属文件不属于候选发布内容集。",
+  "audit_version": "public-export-audit-v1",
+  "config_version": "public-export-allowlist-v1",
+  "content_file_count": 143,
+  "manifest_file": "public-export-manifest.json",
+  "result": "passed",
+  "ruleset_id": "public-export-scan-rules-v1",
+  "scan": {
+    "all_clean": true,
+    "records": [
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": ".dockerignore",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": ".gitignore",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "Dockerfile",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-doc",
+        "file_path": "LICENSE",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-doc",
+        "file_path": "README.md",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/api/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/api/assembly.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/api/events.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/api/projector.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/api/routes.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/api/service.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/approval/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/approval/memory.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/approval/port.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/approval/postgres.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/approval/reconciliation.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/aggregate.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/decision.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/grader.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/manifest.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/runner.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/evaluation/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/graph/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/graph/approval.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/graph/runner.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/graph/state.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/loop.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/messages.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/model_client.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/search_knowledge_tool.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/store/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/store/checkpoint.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/store/memory.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/store/port.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/store/postgres.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/tool_runtime.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/tools/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/tools/create_follow_up_request.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/aggregate.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/decision.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/keys.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/manifest.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/scan.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/store.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cache/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/closure/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/closure/aggregate.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/closure/decision.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/closure/manifest.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/closure/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/closure/scan.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/closure/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/comparison.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cost/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cost/aggregate.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cost/decision.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cost/manifest.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cost/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cost/scan.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/cost/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/data.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/load/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/load/aggregate.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/load/decision.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/load/manifest.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/load/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/load/scan.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/load/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/metrics.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/aggregate.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/annotations.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/decision.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/details.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/manifest.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/scan.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/quality/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/rerank_smoke.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/rewrite_snapshot.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/runner.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/evaluation/worker.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/llm/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/llm/client.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/main.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/authority_assembly.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/authority_entrypoint.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/authority_fetch.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/authority_registry.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/authority_search.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/authority_types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/codec.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/errors.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/knowledge_entrypoint.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/knowledge_search.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/probe.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/registry.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/retrieval_assembly.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/mcp/server.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/decision.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/events.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/metrics.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/recorder.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/reporting.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/scan.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/observability/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/answering.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/chunking.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/embedding.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/ingestion.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/production_corpus.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/retrieval.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/retrieval_types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/rag/vector_store.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/retrieval_strategies/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/retrieval_strategies/bm25.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/retrieval_strategies/dense.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/retrieval_strategies/hybrid.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/retrieval_strategies/rerank.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/retrieval_strategies/rewrite.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/retrieval_strategies/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/settings.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "structured",
+        "file_path": "docker-compose.yml",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-doc",
+        "file_path": "docs/PUBLIC_REPRODUCIBILITY.md",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "structured",
+        "file_path": "fixtures/public/agent-run-summary.json",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "structured",
+        "file_path": "fixtures/public/evaluation-v2.schema.json",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-doc",
+        "file_path": "fixtures/public/health_topics.txt",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "structured",
+        "file_path": "fixtures/public/sample-result.json",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-doc",
+        "file_path": "requirements-dev.txt",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-doc",
+        "file_path": "requirements.txt",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "tests/contract/test_public_contract.py",
+        "hits": [],
+        "suppressed": []
+      }
+    ],
+    "total_files": 143,
+    "total_hits": 0,
+    "total_suppressed": 0
+  }
+}

@@ -115,6 +115,19 @@ def build_markdown_summary(
             f"- illegal_tool_leaks: {safety['illegal_tool_leaks']}",
             f"- unresolved_unknown_outcomes: {safety['unresolved_unknown_outcomes']}",
             "",
+            "## 失败分类",
+        ]
+    )
+    if aggregate["failure_categories"]:
+        lines.extend(
+            f"- `{reason}`: {count}"
+            for reason, count in aggregate["failure_categories"].items()
+        )
+    else:
+        lines.append("- 无任务失败。")
+    lines.extend(
+        [
+            "",
             "## 决策理由",
         ]
     )

@@ -18,6 +18,8 @@ _ALLOWED_LAYERS = {AgentTaskLayer.shared, AgentTaskLayer.agent_only}
 _ALLOWED_GRADERS = {"contains_all", "terminal_status", "tool_success"}
 # 允许的期望终态。
 _ALLOWED_STATUSES = {"completed", "failed", "cancelled", "running"}
+# 真实运行可复现的操作场景；超时由专门的 ToolRuntime 测试覆盖，不能伪造为 Provider 结果。
+_ALLOWED_SCENARIOS = {"direct", "multi-clue", "ood-refusal", "approval", "cancel", "recovery"}
 # 明确占位符前缀：模板未替换时禁止正式确认。
 _PLACEHOLDER_MARKERS = ("REPLACE_", "TODO_", "CHANGEME", "<YOUR_", "YOUR_")
 
@@ -110,6 +112,9 @@ def parse_agent_tasks(payload: object) -> tuple[AgentTaskCase, ...]:
             raise ValueError(f"任务[{index}].expected_status 不合法")
         expect_tool_success = bool(row.get("expect_tool_success", False))
         expect_approval_resume = bool(row.get("expect_approval_resume", False))
+        scenario = _require_non_empty_str(row.get("scenario", "direct"), f"任务[{index}].scenario")
+        if scenario not in _ALLOWED_SCENARIOS:
+            raise ValueError(f"任务[{index}].scenario 不合法")
         notes = row.get("notes", "")
         if notes is None:
             notes = ""
@@ -129,6 +134,7 @@ def parse_agent_tasks(payload: object) -> tuple[AgentTaskCase, ...]:
                 expected_status=expected_status,
                 expect_tool_success=expect_tool_success,
                 expect_approval_resume=expect_approval_resume,
+                scenario=scenario,
                 notes=notes,
             )
         )

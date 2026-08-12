@@ -75,6 +75,8 @@ class EvaluationManifest:
     dataset_sha256: str
     # 保存 manifest 创建日期文本。
     created: str
+    # 保存可重建的切片策略；缺失时兼容历史 fixed manifest。
+    chunking_strategy: str = "fixed"
 
 
 # frozen=True 表示加载完成的输入包不会在运行中更换成员。

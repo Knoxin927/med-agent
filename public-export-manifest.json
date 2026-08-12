@@ -1,0 +1,868 @@
+{
+  "config_version": "public-export-allowlist-v1",
+  "entries": [
+    {
+      "file_kind": "text-code",
+      "rel_path": ".dockerignore",
+      "sha256": "d502242d7e5dcb0024984f2e702d823b8fd97160374e1ba7a5a0243dc1891509",
+      "size_bytes": 688
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": ".gitignore",
+      "sha256": "06dd9f8fc3b6088ce6113c275082f780a5cb036ac410a2b3815e6d508fb533bb",
+      "size_bytes": 624
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "Dockerfile",
+      "sha256": "eb05fbe1423a0c9768ec65a43daa52ddfb79be202563a1467935dbad198d879c",
+      "size_bytes": 798
+    },
+    {
+      "file_kind": "text-doc",
+      "rel_path": "LICENSE",
+      "sha256": "a2c31993cf4dd9ea4e14b9201d87ef4f4607a34b92332160cd4d7048b522368e",
+      "size_bytes": 1066
+    },
+    {
+      "file_kind": "text-doc",
+      "rel_path": "README.md",
+      "sha256": "a1ec1e79471fccfbeb5d184776ad94e242c88ffda6669012171d8a9c2459b85e",
+      "size_bytes": 13724
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/__init__.py",
+      "sha256": "bf5240e877db69d9e99a9a8564032b58e57111c0401e784746c57d3f946efd3c",
+      "size_bytes": 357
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/api/__init__.py",
+      "sha256": "5c5b16292127691ea68c55335d128114c808ca6071ccc20d078232054091ca52",
+      "size_bytes": 279
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/api/assembly.py",
+      "sha256": "71523045c2e76f77bb3591a54c8cf1edf50604b756e78331440145bdc1acaf39",
+      "size_bytes": 4993
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/api/events.py",
+      "sha256": "2c4e2e67c00d41df6bd9de67c238d627f5f760450616a0d0c981c743c2da6d94",
+      "size_bytes": 987
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/api/projector.py",
+      "sha256": "8fc4cffc3553b2bf2d2b1fc74aed8e014aef73afa99ec415638f22b8b7738dc8",
+      "size_bytes": 5836
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/api/routes.py",
+      "sha256": "e9a5c9d4ab05290cc1a25d4d73b7b8a5527f53cfdfcc8fe8a4d84d928b6f8550",
+      "size_bytes": 4401
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/api/service.py",
+      "sha256": "a43540a5376b7aed18be508e737115e1ba60d3babe99c1b708cd4bf08d6ce87d",
+      "size_bytes": 10030
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/approval/__init__.py",
+      "sha256": "004fcba811a77a5665cc27abac5f26cbe1f6816ba8dc7e7df9258aa6e7afa233",
+      "size_bytes": 1122
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/approval/memory.py",
+      "sha256": "a0ed8dfefe14c6d3ea40b648f200c3b80b401cf43a720ead03054305a9313fbe",
+      "size_bytes": 7827
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/approval/port.py",
+      "sha256": "c8393e721d5079aaf1d874e47793597c9d7e9d52bb3b6379fe9bc62e72730c91",
+      "size_bytes": 4066
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/approval/postgres.py",
+      "sha256": "2020f4dd8f8a82f1c6b4f29d34c079c0abbc0b86de797754a9130cee1c6c1d5d",
+      "size_bytes": 16265
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/approval/reconciliation.py",
+      "sha256": "ce1721002d8007bf6431adbfa37d1b884b6af911da15a79f60a9df700681fd51",
+      "size_bytes": 1345
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/__init__.py",
+      "sha256": "5c7b9a80999f95a84992c3b8462648f51627d967a05578f4f420bc92bb6a40e5",
+      "size_bytes": 1297
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/aggregate.py",
+      "sha256": "2801869ad5a85eed9cc19d342be1bae8de13c628a2a6499c1d65630881b12d63",
+      "size_bytes": 4068
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/decision.py",
+      "sha256": "b4a7a35d344071b80f1ad1f7aedf79d50628f58a2683878b27cbba9a9da15d7d",
+      "size_bytes": 4675
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/grader.py",
+      "sha256": "2a895a8a791c82c60f56cfa2a19e3b382a10101bd6c6231308b03f22df843aa4",
+      "size_bytes": 2334
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/manifest.py",
+      "sha256": "4e79bbb16b9af6e3613511f2538058955c931b5daacc9f2bb62dfff5dede1ebc",
+      "size_bytes": 12016
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/reporting.py",
+      "sha256": "b0d94d68182379bafa47636e44a5532d2f90570b17ad897618d8f528fe94f832",
+      "size_bytes": 7590
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/runner.py",
+      "sha256": "5d9db8e0826c424add3414d39f984f2f2c0d3aafd02e517ccc53526f29c69c46",
+      "size_bytes": 4711
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/evaluation/types.py",
+      "sha256": "f2ec3b85b43eb23d4f9587bbb5259766de8adf6babdf2e0bcf0806e150b1d9ee",
+      "size_bytes": 4504
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/graph/__init__.py",
+      "sha256": "285c4dbdda4af2cb1f0b19ee2bc7e5e321a8452c55d40a6ec310f7e92f034ee3",
+      "size_bytes": 352
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/graph/approval.py",
+      "sha256": "d993e904437400921d5d5ed894be1fedfca8b53f20a59c5665e5292621d0de12",
+      "size_bytes": 2547
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/graph/runner.py",
+      "sha256": "5348cf6a2e4145856f1e3c780e3ef6f92bdaec8ee5e7e0b1a9d5634beae404f8",
+      "size_bytes": 15770
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/graph/state.py",
+      "sha256": "4c5d8805ddb554d3df6721623397135481b919064b2634502c4c12b607537005",
+      "size_bytes": 18546
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/loop.py",
+      "sha256": "94b5d70929a9570dd6057515ea289d7eb887f2be526a5eaaa45e021bdfdd22bc",
+      "size_bytes": 4010
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/messages.py",
+      "sha256": "b5fcb13fd4e8f6a626e36d501e8a1fe049c84694ad3b68725a890a618a26e3a9",
+      "size_bytes": 5486
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/model_client.py",
+      "sha256": "b387d116526a175bbffd8d536a30ed5448242eb3f1d70c082dd97d36d78e12a8",
+      "size_bytes": 10334
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/search_knowledge_tool.py",
+      "sha256": "f5c39b38692dcfe39b06108d6a8b92bfb668d87d3069c5aeb8c45921b86b10f3",
+      "size_bytes": 5411
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/store/__init__.py",
+      "sha256": "ae7d81dfc446afb9ab1f18102f627585aa7472af330c84b9ec7f9877d1b32f51",
+      "size_bytes": 665
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/store/checkpoint.py",
+      "sha256": "31114e8d15d836ccd7d01c96eb7eb13c3919f1fcd8029950822c07ae56ef14ae",
+      "size_bytes": 2463
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/store/memory.py",
+      "sha256": "4cadf163055b06078c6509d6c4a28a990d281f3b1918664e465393883572e168",
+      "size_bytes": 2345
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/store/port.py",
+      "sha256": "5e002a97b82de34b524816ca0dcb024ba0fc6a3a03f7851ebccdd234707d7584",
+      "size_bytes": 10388
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/store/postgres.py",
+      "sha256": "8c1240fb323e23a2facbe36d19fa31f3878c0fdfb3832bd50b1305fb6cc2ed5f",
+      "size_bytes": 3698
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/tool_runtime.py",
+      "sha256": "9efaf540ddc66488b42948621e1e5141cc165e3baf2366f138ff85a9326e744f",
+      "size_bytes": 16630
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/tools/__init__.py",
+      "sha256": "f1d745c9e7ad189e595cf1893fee3ab8ac75bf763fb842a322d5fba770c256fd",
+      "size_bytes": 53
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/tools/create_follow_up_request.py",
+      "sha256": "1051361a17276d9cc174004c572e26785244e5f5e8580ed3c84b94f77f714c95",
+      "size_bytes": 5820
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/types.py",
+      "sha256": "fe3a1da644b37b40952b8c41f82f4420bc4e52fdcdc7413f49a66f8acb201495",
+      "size_bytes": 8938
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/__init__.py",
+      "sha256": "8b862fb7c3a15af310164d5d9f85a9dcc3ebc372e88667f98200c08907b7d11d",
+      "size_bytes": 81
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/__init__.py",
+      "sha256": "36e06795c026a4611ea6e6dfbaaf9ce458b3fd2c700e5368f39eae11b7994683",
+      "size_bytes": 117
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/aggregate.py",
+      "sha256": "0551d018a53c8ae0cb92714c11bab294604c6050cf9fea17ce2ee2f120cede5d",
+      "size_bytes": 5672
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/decision.py",
+      "sha256": "53233a6bd09248976021b9b71a8473b0a20b380b97329f1ee5560efbe6e1ed53",
+      "size_bytes": 3573
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/keys.py",
+      "sha256": "fe7e5ed1cb5b3094df3297a0daef0d73bdbb786e42bebedfe6b0139fc0f53a19",
+      "size_bytes": 4085
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/manifest.py",
+      "sha256": "39dde60529b60b3c18cd8d14ce1729c633e612c5055c39ca5e63ee8cfee3af93",
+      "size_bytes": 18088
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/reporting.py",
+      "sha256": "5e214e9eb6751dd4aef692d0a6d6689191518ba7db6a3c578c6f3bf67a81f4ad",
+      "size_bytes": 11855
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/scan.py",
+      "sha256": "5c7c73aacdda934b5866b555d656ef2d8d4c21e737971b937a6d7f0c7901f733",
+      "size_bytes": 1777
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/store.py",
+      "sha256": "c4b29c38d5719c6284916e25e101b6edc2a2c55bac6dc6a96e0a252813828edb",
+      "size_bytes": 11636
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cache/types.py",
+      "sha256": "440aea6c17ac46efbb8d2194e8b2e08ed42ba3b177e5d47bcf09f9c120b66c39",
+      "size_bytes": 5475
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/closure/__init__.py",
+      "sha256": "af70b27030d69ab861214e25a68d95a7fa51acbb20de9ff0844a6ec3e9f9dbda",
+      "size_bytes": 97
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/closure/aggregate.py",
+      "sha256": "e46c78878798c288e5150091a669cb5febe125aa0696e0b2b30d69242fd61f8c",
+      "size_bytes": 6111
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/closure/decision.py",
+      "sha256": "a15f3a3ff1307346b24a80dbb6f266f4d424ed71ea3e5f450028b298710849ea",
+      "size_bytes": 4840
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/closure/manifest.py",
+      "sha256": "072cdf7dd0e110376ad3c5f28b2b8466fc503073e0c75ae972fcaed855e4bd50",
+      "size_bytes": 7120
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/closure/reporting.py",
+      "sha256": "ae2c6780699d29a187a28208a9d128f053cbf28ac7dac450f85f15b2933134c0",
+      "size_bytes": 6838
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/closure/scan.py",
+      "sha256": "80fb2313f47bc57d256a007822cd7456547931cfb989821def0b4fdb2520da09",
+      "size_bytes": 1725
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/closure/types.py",
+      "sha256": "0c7c98d5af69a1871cee3e42f030315fd7cbf2e4ac8e11dbdd81a2083eada7cb",
+      "size_bytes": 4530
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/comparison.py",
+      "sha256": "8ea2c76a81812a6b7ef46a6e2754d6d94c748c0e6ccc243db1ea7eea94232fa8",
+      "size_bytes": 38128
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cost/__init__.py",
+      "sha256": "448dc157fc10d9cc533ba38faa84f9630117e225028fca3f50c613d0438c5c38",
+      "size_bytes": 120
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cost/aggregate.py",
+      "sha256": "55df5f5bad0b90c8d5e78b55e162b1b348b219a9059c8045665ef87b580898d5",
+      "size_bytes": 2944
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cost/decision.py",
+      "sha256": "4b50a501049f8c8690da6be2aea26d2ae7efa42d91160f03bba72ed70f583051",
+      "size_bytes": 3359
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cost/manifest.py",
+      "sha256": "98765bda3949aca10d5662bd97d76711e893cb1a2d9a41b67f291574b6ab4a77",
+      "size_bytes": 17062
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cost/reporting.py",
+      "sha256": "7de540318b495105d2ebe940a6e4eab875506596738f85f0723dc1b01c9a8b10",
+      "size_bytes": 11684
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cost/scan.py",
+      "sha256": "86d7496b1cc51227514d5df222aadff5a7313b58605abbac9f66c30795a40a74",
+      "size_bytes": 1722
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/cost/types.py",
+      "sha256": "a266586d5bbd0e12b78a6f0433474ed4e8d093a736729892fb3c51a6cdb79bea",
+      "size_bytes": 5195
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/data.py",
+      "sha256": "3c0b21fd3955cae6a68d21f5c1d5bae4628cd1e6e45d07e45cd6ad3761099714",
+      "size_bytes": 33715
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/load/__init__.py",
+      "sha256": "16fe0c543db81a8978286080cabf8d3a7f37effef5cdc9f43b503e53eda31e3d",
+      "size_bytes": 101
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/load/aggregate.py",
+      "sha256": "2f2675267408cb386144e997d1e0c590299221dfedde7440cf26686ecdb788c3",
+      "size_bytes": 5246
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/load/decision.py",
+      "sha256": "e5d388b5fc52576729cc5d3702f6c77810cefcb32b7b2f34b0d023c9c2bc2001",
+      "size_bytes": 3808
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/load/manifest.py",
+      "sha256": "879213aecd211094f31720168e38e5e836c026dffdb2d66e1973231b4a06229d",
+      "size_bytes": 16647
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/load/reporting.py",
+      "sha256": "fd2dc58c51431736ecec6995c744de1ec5225c6f26a34f6493dca62525f6113b",
+      "size_bytes": 13946
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/load/scan.py",
+      "sha256": "2f173306318cce0c26f1ec6f998ceadbfc9de82ceccdfc556a17841fef9deb03",
+      "size_bytes": 1675
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/load/types.py",
+      "sha256": "b9a53ef6da7503e766b7c0c6a2e0485d20424ae502b587a952d5506295fa5fd6",
+      "size_bytes": 4284
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/metrics.py",
+      "sha256": "8d11226e4ad7c2a092b7764a3da22bb9e33fdcb8e14b9be39c58fc68f90a9a45",
+      "size_bytes": 9327
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/__init__.py",
+      "sha256": "80c057145b182bf3fe3f8179578a30bb8067c4facbecbed87b36b0e600c7369a",
+      "size_bytes": 96
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/aggregate.py",
+      "sha256": "056066ab8ea122280ced91449ae938b160d4f1e5f6fe202f9f1786a1b20538d3",
+      "size_bytes": 11778
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/annotations.py",
+      "sha256": "20217a040475d20d863cf27312a3e5409d801e33512170ab1432cf9c6c21abf7",
+      "size_bytes": 16388
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/decision.py",
+      "sha256": "d0e788275f9b10c7596ec3d6b38435a589fac457fa2f0933639bf8048c62b90f",
+      "size_bytes": 8128
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/details.py",
+      "sha256": "57c550a0bcaf8aa5d4498d21a8ffd33c3d90f401f508ac3eeb029698ecbfc369",
+      "size_bytes": 14529
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/manifest.py",
+      "sha256": "ef449ce4b59ce9d19afe944f8aef5c5f76a87ca9bf24f76ddbd7356604ec455f",
+      "size_bytes": 18970
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/reporting.py",
+      "sha256": "11542e23934541a220002ddc6144f93de67983500545096fc7f9a8fcedbf03b8",
+      "size_bytes": 15879
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/scan.py",
+      "sha256": "9e3ebc8da0c1f323e9585ef24aa719acd24da74bd21585e94e626871d81860ce",
+      "size_bytes": 1944
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/quality/types.py",
+      "sha256": "be1b427cdcfe4577f6b5be7d6b607c632b1b9f9416eace7b1e1ee0a9be914fa0",
+      "size_bytes": 10954
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/reporting.py",
+      "sha256": "67866dab328990e45de8fc32498d454e847a7a65b6ee29ea62e18706846932ef",
+      "size_bytes": 64436
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/rerank_smoke.py",
+      "sha256": "8da587dc7b749559f907bf7448f24c479ad2ec57c63f17b63dc7e0627029ad18",
+      "size_bytes": 12166
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/rewrite_snapshot.py",
+      "sha256": "cff169bd28c704d22bedd0906a0cc2456539822e04ac620b3872be845511de1c",
+      "size_bytes": 19586
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/runner.py",
+      "sha256": "32ec601f2e545a21df0e9060518601f5245d3aa571608c635c5b5c48a2f60efd",
+      "size_bytes": 18511
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/types.py",
+      "sha256": "27d6648c812b1c9551252d1c46abaab1f39626f623aa426d76128a5f1c011e1b",
+      "size_bytes": 6811
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/evaluation/worker.py",
+      "sha256": "39f86196c837b75c80f87c615422f2e7bee6661b73963909c5c1f584c380c21f",
+      "size_bytes": 37741
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/llm/__init__.py",
+      "sha256": "896fccf1df101b75267315451be15298e70657f65c8ffaa2babcbc522d8348da",
+      "size_bytes": 45
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/llm/client.py",
+      "sha256": "7b15d923d59f249fe0d808dff3e3ef2f2d649288e4564ebe9871f54fada8c022",
+      "size_bytes": 5562
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/main.py",
+      "sha256": "a4e4df361eb95549963ec8bc96e05923c2c40b12d45882c1176add36084b6af1",
+      "size_bytes": 9838
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/__init__.py",
+      "sha256": "161e3ffcfba3313a1895cd2e4bf43e98767150570856770d1f6f94ba8d33477e",
+      "size_bytes": 185
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/authority_assembly.py",
+      "sha256": "5c9d07069796a0d025c20e0ca9cac357e40018f7e900b39dec61bad71b9bc69c",
+      "size_bytes": 6178
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/authority_entrypoint.py",
+      "sha256": "b547cf108880f2cc181e903f1220b70e2103abd1a3ebca738bed58e25386d71e",
+      "size_bytes": 1540
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/authority_fetch.py",
+      "sha256": "06ebe4c51cf2e654516048f00ac5e57690fc74f6b706393241a48949cafd0fa4",
+      "size_bytes": 15596
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/authority_registry.py",
+      "sha256": "2ff194b7fcf4122148d373d7363411c42ab5333e6a57bff06fa3444e70e44514",
+      "size_bytes": 8362
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/authority_search.py",
+      "sha256": "39ffd0fe884a04aeedb81b3cf99e309c337fe836118f5c98e6b0103b84780c2f",
+      "size_bytes": 10804
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/authority_types.py",
+      "sha256": "6f1c8b046115788dbfff203fbde1ab6aa8e401063a3bbc928467d4e9d56ced6f",
+      "size_bytes": 4838
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/codec.py",
+      "sha256": "52410455f2aa55c3c42d841be0dcef96a5155dcd5d605c511faf2541785bd8b7",
+      "size_bytes": 1649
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/errors.py",
+      "sha256": "168577786c36245fa66bdf57bde711c8b83e3b16451461c0e861402d7996c01a",
+      "size_bytes": 2103
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/knowledge_entrypoint.py",
+      "sha256": "fec8d39a5e58ea3343b392aeb365a1bed3ccff07ca7d195cd78f89af4d4486a7",
+      "size_bytes": 1341
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/knowledge_search.py",
+      "sha256": "a429831a54c851131aeddc135089f7f22cbe789393ef43047f5584e097f9f316",
+      "size_bytes": 7792
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/probe.py",
+      "sha256": "586394e9e15f733d3e62c485d1cfb8dffb8934ba888b17cc656ddc761c128806",
+      "size_bytes": 4964
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/registry.py",
+      "sha256": "e505067ff647752df4c2d107f9fc66cfdaf2260f7589708badc40f47c58593bc",
+      "size_bytes": 8481
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/retrieval_assembly.py",
+      "sha256": "ceac3f7c034e03d540d0e1810b6018bf7919aab05eb6f59b3599391ded27e64d",
+      "size_bytes": 6374
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/mcp/server.py",
+      "sha256": "9272338a9fb03d6911ae13d9806a182cc558d095bcc640844839fbe6436bb0b6",
+      "size_bytes": 12733
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/__init__.py",
+      "sha256": "64b4d1f444afd595359ebb3f0bb9fb082a359323314852cb8616b64ca39b9c74",
+      "size_bytes": 625
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/decision.py",
+      "sha256": "cda208f84ec2d52bdc1ffd7141dc8fd5093c75f02c4b10324cca2548e64df0d6",
+      "size_bytes": 5121
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/events.py",
+      "sha256": "523ca0c52137335af03ca9b6daefc6b565b20a7698c4e11e32df430deb181b03",
+      "size_bytes": 13168
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/metrics.py",
+      "sha256": "52126d06201f5c83cd757abcfeaac833acc09bfeee43b9687eefe2cf808d35ae",
+      "size_bytes": 8565
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/recorder.py",
+      "sha256": "1546e352747bde1641949b357f0aedbc2d21b52d148e4944988d4f14aead4d55",
+      "size_bytes": 4109
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/reporting.py",
+      "sha256": "ed6800bb60db3997afacdcdfe2138d4e9770a12d68da901c9743236a3c8370f3",
+      "size_bytes": 12510
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/scan.py",
+      "sha256": "1b5730be7b9b364ad1d5aa1ed499108555d43bfc454f033273088d31d74d7757",
+      "size_bytes": 1677
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/observability/types.py",
+      "sha256": "cdace662d2a2f9e3c3664b6a97f360ab39b908e46b8355a66741c362db9c0d6a",
+      "size_bytes": 3379
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/__init__.py",
+      "sha256": "74dda26785165f1645f964892c68725335d1106e0f3b533c70cba09a2c3432f9",
+      "size_bytes": 84
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/answering.py",
+      "sha256": "544bc25cf082d792f9fb857dead977664d2b7ff8d06b298e505e448c44adf548",
+      "size_bytes": 5975
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/chunking.py",
+      "sha256": "60ca572219bcd52ab0bdff1b0aa4d71023ce406f0f7aa716756aa09a0854239c",
+      "size_bytes": 5245
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/embedding.py",
+      "sha256": "ca0522dd0daa3ddc1d54116fddb9ed58a3a55d94b46e932dec0150292039e21f",
+      "size_bytes": 4618
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/ingestion.py",
+      "sha256": "bd8800d2d273329834062e15ec0fd181170e7c30626bd274a232be0629011310",
+      "size_bytes": 2511
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/production_corpus.py",
+      "sha256": "502dfb957be5a702d07009f4b6a61d7f19f0344f0504b3f3c8d194f3648eeb0f",
+      "size_bytes": 874
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/retrieval.py",
+      "sha256": "080eef0728df6409686768654b3bb38741112b2babe83fd3f3b3f623a51707fe",
+      "size_bytes": 2868
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/retrieval_types.py",
+      "sha256": "3b95410eb20ef60b9bffc12b1d2bf2102050f2cd68d7b5ec6e09b4c88220f37d",
+      "size_bytes": 771
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/rag/vector_store.py",
+      "sha256": "5503f0d5c58cb88bb708a49d8c3ac68a776f4c13b015034b22542ca880d7bdd4",
+      "size_bytes": 24702
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/retrieval_strategies/__init__.py",
+      "sha256": "01527402f3b68840f04c2563f20a72d07251dd083db29e67cbd480c41e80d3f5",
+      "size_bytes": 74
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/retrieval_strategies/bm25.py",
+      "sha256": "8f5dd6b56ad90b845a2dbd4a7983461ed3199aacebe5d4550b95a29c6220556b",
+      "size_bytes": 12977
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/retrieval_strategies/dense.py",
+      "sha256": "c0b751e736e9272a157452b562b3b71c3a1219aa938702ab41b1c0117e06776e",
+      "size_bytes": 2529
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/retrieval_strategies/hybrid.py",
+      "sha256": "ea4c6e9926e9a7963142b1b74ab39da15c837dbfe989649565e1c96ff0cd5a45",
+      "size_bytes": 4781
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/retrieval_strategies/rerank.py",
+      "sha256": "ceb73b781e64f7a242fe7a47c77a723584fba39bcc917ed01a0aeea1cf8a60aa",
+      "size_bytes": 8144
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/retrieval_strategies/rewrite.py",
+      "sha256": "2e88a7d151b55006784969475b65f61d873dec7d06a88bb751877dc57c1edca4",
+      "size_bytes": 16873
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/retrieval_strategies/types.py",
+      "sha256": "60d8d7a302ad9b26ae71d159ece3216deb6e90938cf19eed4ce93b26ffa3e60d",
+      "size_bytes": 6529
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/settings.py",
+      "sha256": "6c58da6add84e3e70ae3c1578cedcf8c4b5996c12f762aa62da5dd04d9944ea1",
+      "size_bytes": 6267
+    },
+    {
+      "file_kind": "structured",
+      "rel_path": "docker-compose.yml",
+      "sha256": "58123b9d8d517872b16423f50c014f41492026f278e7efd21fdb3824bc96631d",
+      "size_bytes": 6294
+    },
+    {
+      "file_kind": "text-doc",
+      "rel_path": "docs/PUBLIC_REPRODUCIBILITY.md",
+      "sha256": "b2057f3414cb8e743fd7a9797a9a44630042e60f7f9c7231b77dae5cc121d5f0",
+      "size_bytes": 1221
+    },
+    {
+      "file_kind": "structured",
+      "rel_path": "fixtures/public/agent-run-summary.json",
+      "sha256": "0ebead37543a06784811bd4e3345223a888f7fae2f258d5b3cdc632271f78e58",
+      "size_bytes": 3165
+    },
+    {
+      "file_kind": "structured",
+      "rel_path": "fixtures/public/evaluation-v2.schema.json",
+      "sha256": "bd626335e8607d65b68473e741b656abddd945eac3677362616431f9843aedb0",
+      "size_bytes": 1086
+    },
+    {
+      "file_kind": "text-doc",
+      "rel_path": "fixtures/public/health_topics.txt",
+      "sha256": "19928614f6f26d828e2c0b881189b987fbcd4325bf6604207feff234de73f409",
+      "size_bytes": 455
+    },
+    {
+      "file_kind": "structured",
+      "rel_path": "fixtures/public/sample-result.json",
+      "sha256": "f8293b6969633a866a08ad2b6822cfa6f9dbf4b7e794a3ced361153345ea2de6",
+      "size_bytes": 643
+    },
+    {
+      "file_kind": "text-doc",
+      "rel_path": "requirements-dev.txt",
+      "sha256": "afa24e425cf01acc4fb4a3d59ab4d13d80972a8582a7fb36a107da8b553a5b11",
+      "size_bytes": 407
+    },
+    {
+      "file_kind": "text-doc",
+      "rel_path": "requirements.txt",
+      "sha256": "36b72f6fc75afe44fd2e934f4eaddba8eec963c35b077155f53c840dedac3b5d",
+      "size_bytes": 1413
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "tests/contract/test_public_contract.py",
+      "sha256": "aa15fac10f3b0fd31682bdc57a80160ba8359667a5c8b128e89031346c22454c",
+      "size_bytes": 2535
+    }
+  ],
+  "generated_at": "2026-08-12T08:10:28+00:00",
+  "manifest_version": "public-export-manifest-v1",
+  "root_name": "med-agent",
+  "ruleset_id": "public-export-scan-rules-v1",
+  "schema_version": 1
+}

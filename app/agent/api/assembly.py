@@ -43,7 +43,7 @@ def _build_create_follow_up_openai_tool() -> dict[str, Any]:
         "type": "function",
         "function": {
             "name": "create_follow_up_request",
-            "description": "创建需要人工确认的本地随访请求，批准前不会写入。",
+            "description": "当用户明确要求创建、提交或安排本地随访请求时必须调用此工具。它会先进入人工审批，批准前不会写入；不要用文字回答代替工具调用。",
             "parameters": {
                 "type": "object",
                 "properties": {

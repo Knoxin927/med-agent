@@ -24,8 +24,11 @@ from app.llm.client import OpenAiCompatibleLlmClient
 from app.rag.answering import build_messages, encode_sse_event, stream_answer_events
 # 导入真实本地 Embedding。
 from app.rag.embedding import BgeM3Embedder
-# 导入 M2 已确认的 dense 聊天策略与聊天边界值对象。
+# 导入 M7 已确认的 hybrid 聊天策略、BM25 与聊天边界值对象。
+from app.rag.production_corpus import load_production_chunks
+from app.retrieval_strategies.bm25 import SELECTED_TOKENIZER_ID, Bm25RetrievalStrategy
 from app.retrieval_strategies.dense import DenseRetrievalStrategy
+from app.retrieval_strategies.hybrid import HybridRrfRetrievalStrategy
 from app.retrieval_strategies.types import RankedChunk
 # 导入配置加载和脱敏配置异常。
 from app.settings import AppSettings, SettingsError, load_settings
@@ -54,15 +57,23 @@ class AppDependencies:
     agent_service: AgentApiService | None = None
 
 
-# 用真实配置、BGE-M3 和 Chroma 创建生产依赖；仅在首次聊天请求时调用。
+# 用真实配置、BGE-M3、BM25 与 Chroma 创建生产依赖；仅在首次聊天请求时调用。
 def build_production_dependencies(settings: AppSettings) -> AppDependencies:
     # 即使调用方绕过 load_settings，也必须在创建任何生产资源前拒绝未批准策略。
-    if settings.retrieval_method != "dense":
-        raise SettingsError("RETRIEVAL_METHOD 仅允许 dense")
+    if settings.retrieval_method != "hybrid":
+        raise SettingsError("RETRIEVAL_METHOD 仅允许 hybrid")
     # 创建一次 BGE-M3，后续聊天请求复用同一模型对象。
     encoder = BgeM3Embedder()
-    # 将已确认的 dense 策略与同一 encoder、Chroma 路径装配为聊天检索依赖。
-    retrieval_strategy = DenseRetrievalStrategy(encoder, settings.rag_chroma_path)
+    # 与 Chroma 同批重建 fixed 切片语料，供 BM25 与 dense 融合。
+    production_chunks = list(load_production_chunks())
+    # dense 通道复用本机 Chroma；BM25 通道绑定同一批 TextChunk。
+    dense_strategy = DenseRetrievalStrategy(encoder, settings.rag_chroma_path)
+    bm25_strategy = Bm25RetrievalStrategy(
+        production_chunks,
+        tokenizer_id=SELECTED_TOKENIZER_ID,
+    )
+    # M7 正式报告确认的 hybrid_rrf 作为聊天默认检索。
+    retrieval_strategy = HybridRrfRetrievalStrategy(dense_strategy, bm25_strategy)
     # 创建带超时和鉴权的上游客户端。
     llm_client = OpenAiCompatibleLlmClient(
         settings.llm_base_url,
@@ -70,9 +81,9 @@ def build_production_dependencies(settings: AppSettings) -> AppDependencies:
         settings.llm_api_key,
         settings.llm_timeout_seconds,
     )
-    # 定义绑定了模型和本机 Chroma 路径的检索闭包。
+    # 定义绑定了 hybrid 策略的检索闭包。
     def retrieve(question: str, top_k: int) -> list[RankedChunk]:
-        # 委托策略返回统一 RankedChunk，不把 M1 distance 泄漏到聊天边界。
+        # 委托策略返回统一 RankedChunk，不把 raw score 泄漏到聊天边界。
         return retrieval_strategy.retrieve(question, top_k=top_k)
 
     # 本机进程内装配 Agent API：内存 store/approval + 真实 tool-calling 模型。
@@ -83,7 +94,7 @@ def build_production_dependencies(settings: AppSettings) -> AppDependencies:
         api_key=settings.llm_api_key,
         timeout_seconds=settings.llm_timeout_seconds,
     )
-    # 固定 RAG 与 Agent 共享同一 dense 检索闭包，但使用隔离的模型客户端。
+    # 固定 RAG 与 Agent 共享同一 hybrid 检索闭包，但使用隔离的模型客户端。
     return AppDependencies(retrieve, llm_client, agent_service)
 
 

@@ -10,7 +10,12 @@ from pathlib import Path, PureWindowsPath
 from typing import Any
 
 # 导入 M1.1 固定切片函数，保证评测身份与真实入库一致。
-from app.rag.chunking import TextChunk, chunk_text, read_utf8_text
+from app.rag.chunking import (
+    TextChunk,
+    chunk_section_sentence_text,
+    chunk_text,
+    read_utf8_text,
+)
 # 导入本模块输出的稳定评测值对象。
 from app.evaluation.types import (
     AnnotationConfirmation,
@@ -168,6 +173,9 @@ def _parse_manifest(raw: dict[str, Any]) -> EvaluationManifest:
     if type(overlap) is not int or overlap < 0 or overlap >= chunk_size:
         # 与 M1.1 的切片参数契约保持一致。
         raise ValueError("manifest overlap 必须是小于 chunk_size 的非负整数")
+    chunking_strategy = raw.get("chunking_strategy", "fixed")
+    if chunking_strategy not in {"fixed", "section-sentence"}:
+        raise ValueError("manifest chunking_strategy 不受支持")
     # 返回字段全部完成基础校验的 manifest。
     return EvaluationManifest(
         schema_version=schema_version,
@@ -179,6 +187,7 @@ def _parse_manifest(raw: dict[str, Any]) -> EvaluationManifest:
         files=tuple(files),
         chunk_size=chunk_size,
         overlap=overlap,
+        chunking_strategy=chunking_strategy,
         dataset_version=_require_non_empty_string(
             raw.get("dataset_version"),
             "dataset_version",
@@ -361,14 +370,24 @@ def _build_chunks(
         # 读取 UTF-8 原文并按 manifest 固定参数切片。
         text = read_utf8_text(corpus_path)
         # 将当前文件所有块追加到全局稳定顺序。
-        chunks.extend(
-            chunk_text(
-                text,
-                corpus_path,
-                chunk_size=manifest.chunk_size,
-                overlap=manifest.overlap,
+        if manifest.chunking_strategy == "section-sentence":
+            chunks.extend(
+                chunk_section_sentence_text(
+                    text,
+                    corpus_path,
+                    chunk_size=manifest.chunk_size,
+                    overlap=manifest.overlap,
+                )
             )
-        )
+        else:
+            chunks.extend(
+                chunk_text(
+                    text,
+                    corpus_path,
+                    chunk_size=manifest.chunk_size,
+                    overlap=manifest.overlap,
+                )
+            )
     # 空语料无法完成检索评测。
     if not chunks:
         # 单个空白文件会被 chunk_text 转为空列表。
@@ -423,6 +442,16 @@ def _validate_bundle_contents(
 
 
 # 加载并组合一套经过 schema、hash、切片和引用校验的评测输入。
+# 只按 manifest 重建语料块，不加载 dataset；供生产 hybrid 与索引脚本复用。
+def load_manifest_chunks(project_root: Path, manifest_path: Path) -> tuple[TextChunk, ...]:
+    """返回与评测/生产共享的冻结 TextChunk 序列。"""
+
+    # 先解析 manifest 字段与切片参数。
+    manifest = _parse_manifest(_read_json_object(manifest_path, "manifest"))
+    # 按固定参数重建全部文本块。
+    return _build_chunks(project_root, manifest)
+
+
 def load_evaluation_bundle(
     project_root: Path,
     manifest_path: Path,
@@ -474,6 +503,15 @@ def load_evaluation_bundle(
 def _text_sha256(text: str) -> str:
     # 文本 hash 不包含本机路径或其他运行环境信息。
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _display_chunk_text(text: str) -> str:
+    """把切片尾部不可见空白显式化，避免审阅工件产生 Git 尾随空格。"""
+
+    trailing_length = len(text) - len(text.rstrip())
+    if trailing_length == 0:
+        return text
+    return f"{text.rstrip()}\n\n[trailing_whitespace_characters={trailing_length}]"
 
 
 # 生成用户可以逐题阅读的精确切片审阅 Markdown。
@@ -542,7 +580,7 @@ def write_annotation_review(
                     f"- chunk_sha256：`{_text_sha256(chunk.text)}`",
                     "",
                     "````text",
-                    chunk.text,
+                    _display_chunk_text(chunk.text),
                     "````",
                     "",
                 ]

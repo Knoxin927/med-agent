@@ -322,9 +322,18 @@ def validate_dense_rerank_details(
             raise ValueError("dense-rerank details 冻结 identity 不合法")
         # 保存经过验证的语料 identity。
         frozen_identities.add(identity)
+    # 候选宽度随冻结语料版本升级；历史 v1=12，当前 v2=50，其他组合拒绝。
+    corpus_version = details.get("input", {}).get("corpus_version")
+    expected_candidate_k = (
+        12
+        if corpus_version in {None, "v1"}
+        else RERANKER_CANDIDATE_K
+        if corpus_version == "v2-fixed"
+        else None
+    )
     # 固定实验参数不得在 worker 与报告之间漂移。
     if (
-        parameters.get("candidate_k") != RERANKER_CANDIDATE_K
+        parameters.get("candidate_k") != expected_candidate_k
         or parameters.get("top_k") != 10
         or parameters.get("reranker_device") != "cpu"
         or parameters.get("reranker_batch_size") != RERANKER_BATCH_SIZE
@@ -400,13 +409,13 @@ def validate_dense_rerank_details(
         pre = pre_rankings[case_id]
         post = post_rankings[case_id]
         final = final_rankings[case_id]
-        # 完整候选必须等于固定候选宽度，最终排名必须精确十条。
+        # 完整候选必须等于该冻结语料版本的候选宽度，最终排名必须精确十条。
         if not isinstance(pre, list) or not isinstance(post, list) or not isinstance(final, list):
             # JSON 类型错误时不允许继续发布。
             raise ValueError("dense-rerank details 排名必须是列表")
         if (
-            len(pre) != RERANKER_CANDIDATE_K
-            or len(post) != RERANKER_CANDIDATE_K
+            len(pre) != expected_candidate_k
+            or len(post) != expected_candidate_k
             or len(final) != 10
         ):
             # 不把短候选当成设计规定的完整候选实验。

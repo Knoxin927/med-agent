@@ -1,4 +1,4 @@
-"""M4.2 无 LLM key 的 dense MCP 生产装配：只构造检索，不碰聊天密钥。"""
+"""M4.2/M7 无 LLM key 的 hybrid MCP 生产装配：只构造检索，不碰聊天密钥。"""
 
 # 导入 os，只读取 RAG_CHROMA_PATH。
 import os
@@ -22,15 +22,21 @@ from app.mcp.knowledge_search import (
 from app.mcp.server import build_mcp_server
 # 导入真实 BGE-M3 编码器；生产路径才构造，测试用 fake provider 绕过。
 from app.rag.embedding import BgeM3Embedder
-# 导入 dense 策略与结果校验。
+# 导入与聊天侧一致的生产语料加载器。
+from app.rag.production_corpus import load_production_chunks
+# 导入 hybrid 组件与结果校验。
+from app.retrieval_strategies.bm25 import SELECTED_TOKENIZER_ID, Bm25RetrievalStrategy
 from app.retrieval_strategies.dense import DenseRetrievalStrategy
-from app.retrieval_strategies.types import RankedChunk, validate_ranked_chunks
+from app.retrieval_strategies.hybrid import HybridRrfRetrievalStrategy
+from app.retrieval_strategies.types import RankedChunk, RetrievalStrategy, validate_ranked_chunks
 
 
 # 默认 Chroma 路径与聊天侧保持一致。
 DEFAULT_RAG_CHROMA_PATH = "data/chroma"
-# MCP 生产检索方法固定为 dense，不读取 RETRIEVAL_METHOD 实验开关。
-MCP_RETRIEVAL_METHOD = "dense"
+# MCP 生产检索方法固定为 hybrid，不读取 RETRIEVAL_METHOD 实验开关。
+MCP_RETRIEVAL_METHOD = "hybrid"
+# 策略层 method 字段使用 hybrid_rrf，与离线评测一致。
+MCP_STRATEGY_METHOD_NAME = "hybrid_rrf"
 # 启动失败时对外唯一允许的固定文案；不得拼接路径/环境/异常正文。
 MCP_RETRIEVAL_STARTUP_MESSAGE = "mcp retrieval startup unavailable"
 # stdio entrypoint 写到 stderr 的固定标签。
@@ -43,11 +49,11 @@ class McpRetrievalStartupError(RuntimeError):
 
 @dataclass(frozen=True)
 class RetrievalSettings:
-    """MCP 生产检索所需的窄配置：只含 Chroma 路径与固定 dense 方法。"""
+    """MCP 生产检索所需的窄配置：只含 Chroma 路径与固定 hybrid 方法。"""
 
     # 本机 Chroma 持久化目录。
     rag_chroma_path: Path
-    # 固定为 dense；字段存在是为了测试断言，不允许 hybrid/rerank。
+    # 固定为 hybrid；字段存在是为了测试断言，不允许 dense/rerank 实验切换。
     retrieval_method: str = MCP_RETRIEVAL_METHOD
 
 
@@ -69,18 +75,23 @@ def load_retrieval_settings(
     )
 
 
-def build_mcp_retrieval_strategy(settings: RetrievalSettings) -> DenseRetrievalStrategy:
-    """根据窄配置构造 DenseRetrievalStrategy；不创建 LLM 客户端。"""
+def build_mcp_retrieval_strategy(settings: RetrievalSettings) -> HybridRrfRetrievalStrategy:
+    """根据窄配置构造 HybridRrfRetrievalStrategy；不创建 LLM 客户端。"""
 
     if settings.retrieval_method != MCP_RETRIEVAL_METHOD:
-        raise ValueError("MCP 检索方法仅允许 dense")
-    # 真实生产会加载 BGE-M3；测试应 fake strategy_provider，避免拉模型。
+        raise ValueError("MCP 检索方法仅允许 hybrid")
+    # 真实生产会加载 BGE-M3 与 v2 fixed 语料；测试应 fake strategy_provider。
     encoder = BgeM3Embedder()
-    return DenseRetrievalStrategy(encoder, settings.rag_chroma_path)
+    dense_strategy = DenseRetrievalStrategy(encoder, settings.rag_chroma_path)
+    bm25_strategy = Bm25RetrievalStrategy(
+        list(load_production_chunks()),
+        tokenizer_id=SELECTED_TOKENIZER_ID,
+    )
+    return HybridRrfRetrievalStrategy(dense_strategy, bm25_strategy)
 
 
 def build_validated_retrieve(
-    strategy: DenseRetrievalStrategy,
+    strategy: RetrievalStrategy,
 ) -> Callable[..., list[RankedChunk]]:
     """把 strategy.retrieve 包装为 validated_retrieve：先检索，再按本次 top_k 校验快照。"""
 
@@ -90,7 +101,7 @@ def build_validated_retrieve(
         # 超额、路径型来源、空文本、错误 rank、重复 identity 一律 fail-closed。
         validate_ranked_chunks(
             results,
-            method_name=MCP_RETRIEVAL_METHOD,
+            method_name=getattr(strategy, "method_name", MCP_STRATEGY_METHOD_NAME),
             top_k=top_k,
         )
         return results
@@ -100,7 +111,7 @@ def build_validated_retrieve(
 
 def build_mcp_knowledge_search_server(
     settings_loader: Callable[[], RetrievalSettings] | None = None,
-    strategy_provider: Callable[[RetrievalSettings], DenseRetrievalStrategy] | None = None,
+    strategy_provider: Callable[[RetrievalSettings], RetrievalStrategy] | None = None,
     *,
     deadline_seconds: float | None = None,
 ) -> tuple[Any, Any]:

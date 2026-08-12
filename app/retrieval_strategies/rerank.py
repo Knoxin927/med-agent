@@ -19,8 +19,8 @@ RERANKER_MODEL_REVISION = "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
 RERANKER_BATCH_SIZE = 4
 # 固定 tokenizer 最大长度，限制单条候选的计算量。
 RERANKER_MAX_LENGTH = 1024
-# 冻结语料实测只有 12 个 chunk，固定重排全部 dense Top-12 候选。
-RERANKER_CANDIDATE_K = 12
+# v2 语料已有 975 个块，固定重排 dense Top-50 候选，再输出最终 Top-10。
+RERANKER_CANDIDATE_K = 50
 
 
 # 用真实 sentence-transformers CrossEncoder 实现窄 scorer 接口。

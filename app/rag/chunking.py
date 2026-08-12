@@ -2,6 +2,7 @@
 
 # 从 dataclasses 导入 dataclass，用较少代码定义只保存数据的类型。
 from dataclasses import dataclass
+import re
 # 从 pathlib 导入 Path，统一处理 Windows 和其他系统的文件路径。
 from pathlib import Path
 
@@ -83,4 +84,41 @@ def chunk_text(
         chunk_index += 1
 
     # 返回按原文顺序排列的所有文本块。
+    return chunks
+
+
+def chunk_section_sentence_text(
+    text: str,
+    source_path: Path,
+    chunk_size: int = 300,
+    overlap: int = 50,
+) -> list[TextChunk]:
+    """按空行 section 和句子打包；超长句回退固定切片。"""
+
+    if chunk_size <= 0 or overlap < 0 or overlap >= chunk_size:
+        raise ValueError("chunking 参数不符合约束")
+    chunks: list[TextChunk] = []
+    for section in (part.strip() for part in text.split("\n\n") if part.strip()):
+        sentences = [
+            part.strip()
+            for part in re.split(r"(?<=[.!?])\s+", section)
+            if part.strip()
+        ]
+        current = ""
+        for sentence in sentences:
+            if len(sentence) > chunk_size:
+                if current:
+                    chunks.append(TextChunk(source_path.name, len(chunks), current))
+                    current = ""
+                for fallback in chunk_text(sentence, source_path, chunk_size, overlap):
+                    chunks.append(TextChunk(source_path.name, len(chunks), fallback.text))
+                continue
+            candidate = f"{current} {sentence}".strip()
+            if current and len(candidate) > chunk_size:
+                chunks.append(TextChunk(source_path.name, len(chunks), current))
+                current = sentence
+            else:
+                current = candidate
+        if current:
+            chunks.append(TextChunk(source_path.name, len(chunks), current))
     return chunks

@@ -36,6 +36,8 @@ class AgentTaskCase:
     expect_tool_success: bool = False
     # 是否期望发生审批恢复。
     expect_approval_resume: bool = False
+    # 执行场景决定真实评测如何处理待审批 run；不参与医疗语义判分。
+    scenario: str = "direct"
     # 可选人工备注，不参与自动聚合。
     notes: str = ""
 
