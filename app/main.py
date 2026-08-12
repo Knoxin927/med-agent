@@ -36,6 +36,8 @@ from app.settings import AppSettings, SettingsError, load_settings
 from app.agent.api.assembly import build_local_agent_api_service
 from app.agent.api.routes import create_agent_router
 from app.agent.api.service import AgentApiService
+from app.agent.db import ping_database
+from app.ops.hot_path_log import emit_hot_path_log, new_request_id, timed_ms
 
 
 # 表示 POST /chat/stream 接收的 JSON 请求。
@@ -86,13 +88,15 @@ def build_production_dependencies(settings: AppSettings) -> AppDependencies:
         # 委托策略返回统一 RankedChunk，不把 raw score 泄漏到聊天边界。
         return retrieval_strategy.retrieve(question, top_k=top_k)
 
-    # 本机进程内装配 Agent API：内存 store/approval + 真实 tool-calling 模型。
+    # 按 settings 选择 memory 或 postgres store/approval；默认 postgres。
     agent_service = build_local_agent_api_service(
         retrieve,
         base_url=settings.llm_base_url,
         model=settings.llm_model,
         api_key=settings.llm_api_key,
         timeout_seconds=settings.llm_timeout_seconds,
+        agent_store=settings.agent_store,
+        agent_database_dsn=settings.agent_database_dsn,
     )
     # 固定 RAG 与 Agent 共享同一 hybrid 检索闭包，但使用隔离的模型客户端。
     return AppDependencies(retrieve, llm_client, agent_service)
@@ -159,28 +163,104 @@ def create_app(dependencies: AppDependencies | None = None) -> FastAPI:
         # 返回 Python 字典，FastAPI 会自动序列化为 JSON。
         return {"status": "ok"}
 
+    @application.get("/ready")
+    def ready_check() -> dict[str, str]:
+        """就绪检查：memory 直接 ready；postgres 需能 ping 数据库。"""
+
+        # 轻量路径：未懒加载生产依赖时，只看配置决定是否要求 DB。
+        try:
+            settings = load_settings()
+        except SettingsError as error:
+            raise HTTPException(status_code=503, detail=str(error)) from error
+        if settings.agent_store == "memory":
+            return {"status": "ready", "agent_store": "memory"}
+        if not settings.agent_database_dsn:
+            raise HTTPException(status_code=503, detail="postgres 模式缺少 AGENT_DATABASE_DSN")
+        connection = None
+        try:
+            from psycopg import connect
+
+            connection = connect(settings.agent_database_dsn)
+            ping_database(connection)
+        except HTTPException:
+            raise
+        except Exception as error:
+            # 绝不回显 DSN/密码；只返回稳定失败语义。
+            raise HTTPException(status_code=503, detail="数据库未就绪") from error
+        finally:
+            if connection is not None:
+                connection.close()
+        return {"status": "ready", "agent_store": "postgres"}
+
     # 注册 M1.4 的流式问答接口。
     @application.post("/chat/stream")
     async def chat_stream(request: ChatRequest) -> StreamingResponse:
+        # 热路径 request_id 不绑定用户输入；日志关闭时仍生成，便于局部调试。
+        request_id = new_request_id()
+        _, latency = timed_ms()
         # 空白字符串虽然通过最小长度，也必须在联网前拒绝。
         if not request.question.strip():
+            emit_hot_path_log(
+                route="/chat/stream",
+                status="rejected",
+                latency_ms=latency(),
+                request_id=request_id,
+                error_code="blank_question",
+            )
             raise HTTPException(status_code=422, detail="question 不能为空白")
         # 读取已经注入或之前请求创建的依赖；与 Agent 路径共享同一套懒加载。
-        current_dependencies = await ensure_dependencies()
+        try:
+            current_dependencies = await ensure_dependencies()
+        except HTTPException as error:
+            emit_hot_path_log(
+                route="/chat/stream",
+                status="error",
+                latency_ms=latency(),
+                request_id=request_id,
+                error_code=f"http_{error.status_code}",
+            )
+            raise
         # 检索失败也必须发生在 SSE 开始前。
         try:
             # BGE-M3 编码和 Chroma 查询都是同步工作，放入线程避免阻塞其他 SSE 请求。
             results = await asyncio.to_thread(current_dependencies.retrieve, request.question, request.top_k)
         except ValueError as error:
+            emit_hot_path_log(
+                route="/chat/stream",
+                status="error",
+                latency_ms=latency(),
+                request_id=request_id,
+                tool_name="search_knowledge",
+                error_code="retrieve_value_error",
+            )
             raise HTTPException(status_code=400, detail=str(error)) from error
         # 用同一份结果快照构造模型消息。
         messages = build_messages(request.question, results) if results else []
 
-        # 定义将内部事件逐帧编码为 SSE 的异步生成器。
+        # 定义将内部事件逐帧编码为 SSE 的异步生成器；流结束再记 latency。
         async def event_stream() -> AsyncIterator[str]:
-            # 逐个产生 token、sources、done 或 error 的标准文本帧。
-            async for event in stream_answer_events(results, messages, current_dependencies.llm_client):
-                yield encode_sse_event(event)
+            final_status = "ok"
+            error_code = "none"
+            try:
+                # 逐个产生 token、sources、done 或 error 的标准文本帧。
+                async for event in stream_answer_events(results, messages, current_dependencies.llm_client):
+                    if getattr(event, "event", None) == "error":
+                        final_status = "error"
+                        error_code = str((getattr(event, "data", {}) or {}).get("code") or "stream_error")
+                    yield encode_sse_event(event)
+            except Exception:
+                final_status = "error"
+                error_code = "stream_exception"
+                raise
+            finally:
+                emit_hot_path_log(
+                    route="/chat/stream",
+                    status=final_status,
+                    latency_ms=latency(),
+                    request_id=request_id,
+                    tool_name="search_knowledge",
+                    error_code=error_code,
+                )
         # 声明标准 SSE Content-Type，交给客户端持续读取。
         return StreamingResponse(event_stream(), media_type="text/event-stream")
 

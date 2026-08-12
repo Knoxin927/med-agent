@@ -577,7 +577,11 @@ def run_evaluator_worker(request: WorkerRequest) -> dict[str, Any]:
     # 其他历史方法保持原来首次 Top-10 检索的冷启动定义。
     else:
         # 至少有一条案例，加载器已保证；取第一条完成首次真实查询。
-        strategy.retrieve(bundle.cases[0].question, top_k=10)
+        strategy.retrieve(
+            bundle.cases[0].question,
+            top_k=10,
+            case_id=bundle.cases[0].case_id,
+        )
     # 冷启动包含加载模型、打开索引和首次检索，不含 builder 入库。
     cold_start_ms = (perf_counter() - cold_started_at) * 1000.0
     # dense-rerank 使用专用 runner，明确保存同候选 pre/post 与分阶段计时。

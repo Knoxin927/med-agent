@@ -26,8 +26,16 @@ class DenseRetrievalStrategy:
         self._chroma_path = chroma_path
 
     # 将 M1.3 RetrievalResult 转换为 M2 的 RankedChunk 列表。
-    def retrieve(self, question: str, *, top_k: int) -> list[RankedChunk]:
+    def retrieve(
+        self,
+        question: str,
+        *,
+        top_k: int,
+        case_id: str | None = None,
+    ) -> list[RankedChunk]:
         """返回连续 rank、唯一 identity 和方向明确的 dense 结果。"""
+
+        del case_id
 
         # 直接委托已经验证问题、K、模型身份与向量契约的 M1.3 入口。
         retrieval_results = retrieve_chunks(

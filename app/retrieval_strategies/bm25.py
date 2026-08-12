@@ -192,8 +192,16 @@ class Bm25RetrievalStrategy:
         self._average_document_length = sum(self._document_lengths) / len(self._chunks)
 
     # 对一个问题返回至多 top_k 条按分数降序的唯一结果。
-    def retrieve(self, question: str, *, top_k: int) -> list[RankedChunk]:
+    def retrieve(
+        self,
+        question: str,
+        *,
+        top_k: int,
+        case_id: str | None = None,
+    ) -> list[RankedChunk]:
         """按 BM25 原始分数排序；分数只用于 BM25 内部诊断。"""
+
+        del case_id
 
         # top_k 必须与公共策略契约一致，提前给出明确错误。
         if type(top_k) is not int or top_k <= 0:

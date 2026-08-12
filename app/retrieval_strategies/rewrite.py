@@ -43,7 +43,12 @@ class QueryRewriter(Protocol):
     """隔离真实 HTTP 适配器与离线 fake 的最小改写边界。"""
 
     # 将一个用户问题改写为语义等价且更利于检索的查询。
-    def rewrite(self, question: str) -> QueryRewriteResult:
+    def rewrite(
+        self,
+        question: str,
+        *,
+        case_id: str | None = None,
+    ) -> QueryRewriteResult:
         """返回改写文本及其模型证据，错误时显式失败。"""
 
 
@@ -102,8 +107,15 @@ class OpenAiCompatibleQueryRewriter:
         )
 
     # 执行受限次数的同步、非流式请求并解析为结构化改写结果。
-    def rewrite(self, question: str) -> QueryRewriteResult:
+    def rewrite(
+        self,
+        question: str,
+        *,
+        case_id: str | None = None,
+    ) -> QueryRewriteResult:
         """返回文本、响应模型和 usage；只有空文本可重试，其他错误立即失败。"""
+
+        del case_id
 
         # 原问题必须有内容，避免向 API 发送无法解释的空用户消息。
         if not isinstance(question, str) or not question.strip():
@@ -293,12 +305,21 @@ class RewriteDenseRetrievalStrategy:
         self._dense_strategy = dense_strategy
 
     # 先改写原问题，再返回与公共 RankedChunk 契约一致的实验结果。
-    def retrieve(self, question: str, *, top_k: int) -> list[RankedChunk]:
+    def retrieve(
+        self,
+        question: str,
+        *,
+        top_k: int,
+        case_id: str | None = None,
+    ) -> list[RankedChunk]:
         """改写问题并委托 dense，任一阶段失败都向调用方显式传播。"""
 
         # 改写器负责外部调用或 fake；策略本身不关心其具体实现。
         # 先验证文本和模型身份，再只取受控文本交给 dense。
-        rewrite_result = validate_query_rewrite_result(self._rewriter.rewrite(question))
+        # 离线快照按 case_id 精确取改写，避免 dataset 中合法重复原问题冲突。
+        rewrite_result = validate_query_rewrite_result(
+            self._rewriter.rewrite(question, case_id=case_id)
+        )
         # 提取已经绑定元数据的单行查询。
         rewritten_query = rewrite_result.rewritten_query
         # 只把已经受控的一行改写交给同一个 dense 策略。

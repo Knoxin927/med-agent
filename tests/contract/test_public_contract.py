@@ -39,12 +39,18 @@ def test_public_sample_result_is_explicitly_synthetic_and_redacted() -> None:
     assert result["observations"]["contract_tests_passed"] == 2
 
 
-def test_public_agent_run_summary_is_redacted_hold_evidence() -> None:
+def test_public_agent_run_summary_is_redacted_v1bound_pass_evidence() -> None:
     result = json.loads((FIXTURE_ROOT / "agent-run-summary.json").read_text(encoding="utf-8"))
 
-    assert result["result_status"] == "hold"
+    assert result["result_status"] == "pass"
+    assert result["source_run"]["run_id"] == "live-v2-full-matrix-20260813-v1bound"
     assert result["source_run"]["task_count"] == 26
-    assert result["source_run"]["tool_success_count"] >= 1
+    assert result["source_run"]["task_success_count"] == 26
+    assert result["source_run"]["shared_success_rate"] == 1.0
+    assert result["source_run"]["agent_only_success_rate"] == 1.0
+    assert result["source_run"]["tool_success_count"] == 12
+    assert result["source_run"]["approval_resume_success_count"] == 6
+    assert result["source_run"]["corpus_version"] == "evaluation/corpora/v1"
     assert result["source_run"]["safety_gates"] == {
         "side_effect_before_approval": 0,
         "duplicate_writes": 0,
@@ -52,6 +58,7 @@ def test_public_agent_run_summary_is_redacted_hold_evidence() -> None:
         "unresolved_unknown_outcomes": 0,
     }
     assert "scenario_breakdown" in result["source_run"]
+    assert any("v1" in item for item in result["source_run"]["known_boundaries"])
     assert all(value == "omitted" for key, value in result["redaction"].items() if key != "personal_data")
     assert result["redaction"]["personal_data"] == "none"
 

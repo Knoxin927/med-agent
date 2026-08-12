@@ -64,13 +64,20 @@ def _close_quietly(resource: Any) -> None:
 
 
 def require_verified_authority_registry(registry: AuthoritySourceRegistry) -> None:
-    """生产装配前要求 who/nhc/chinacdc 三条均存在且 verified。"""
+    """生产装配前要求至少一条已登记源，且每条均为 verified。
 
-    required = ("who", "nhc", "chinacdc")
-    for source_id in required:
+    live 允许只启用单源（当前 WHO）；未登记的 nhc/chinacdc 不阻塞。
+    空 registry 或任何未 verified entry 仍 fail-closed。
+    """
+
+    source_ids = registry.list_source_ids()
+    if not source_ids:
+        raise McpAuthorityStartupError(MCP_AUTHORITY_STARTUP_MESSAGE)
+    for source_id in source_ids:
         source = registry.get(source_id)
         if source is None or not source.verified:
             raise McpAuthorityStartupError(MCP_AUTHORITY_STARTUP_MESSAGE)
+
 
 
 def build_mcp_search_server(

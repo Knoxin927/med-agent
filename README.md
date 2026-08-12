@@ -86,7 +86,11 @@ $py = ".\.venv-m1-2\Scripts\python.exe"
 # 私有副本可参考 `.env.example`；公开候选不导出该模板。
 
 # 3) 启动依赖与本机 API（SSE smoke 用本机 uvicorn + 本机 Chroma，不要依赖 Docker api）
-docker compose up -d postgres redis
+# 默认 = dev-postgres / demo-full：postgres + api 依赖；SSE smoke 仍建议本机 uvicorn + 本机 Chroma
+docker compose up -d postgres
+# 等价演示：docker compose --profile demo-full up -d
+# 内存 store：docker compose --profile dev-memory up -d api-memory
+# 可选：docker compose --profile optional-redis up -d redis  # 未接热路径，默认不必启动
 & $py -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 # 4) 另开一个已位于项目根的终端做健康检查
@@ -108,6 +112,10 @@ curl http://127.0.0.1:8000/health
 
 - 先进入项目根；不要在其他目录直接复制执行 compose/uvicorn/scripts。
 - API 在首次 /chat/stream 或 Agent 请求前不会读取密钥或加载模型，避免任何启动期网络行为。
+- Agent run/approval 默认 `AGENT_STORE=postgres`（与 Compose Postgres 一致）；单测可用 `memory`。`GET /ready` 会在 postgres 模式 ping 数据库；`GET /health` 仍只返回 `{"status":"ok"}`。
+- Redis 目前为 **optional**：Compose 可启动，但业务代码未接入 Redis 读写；不要把它写成已上线缓存。
+- 热路径结构化日志默认开启（`HOT_PATH_LOG=1`）：`/chat/stream` 与 Agent start/resume/cancel 输出一行 JSON（request_id/run_id/tool_name/latency_ms/status）；不写 question/query/密钥。这不等于 M5.3 `production_logging_claim=true`。
+- 3 分钟工程演示清单：`& $py scripts\run_engineering_demo_3min.py`（默认 dry-run；`--execute` 可探针 health/ready 与 recovery）。
 - 真实 LLM 调用依赖 .env 中的 LLM_API_KEY；缺密钥会在网络访问前以 503 失败，绝不打印或回显密钥。
 - 测试默认使用 falsified 检索与 LLM，可在不联网、无真实密钥状态下完整运行。
 - 公开候选只导出 `tests/contract/`；它验证 fixture、评测 schema 与基础切片，不替代私有副本中的完整测试与正式评测。
@@ -117,12 +125,14 @@ curl http://127.0.0.1:8000/health
 
 | 能力 | 实现位置 | 失败/边界 |
 | --- | --- | --- |
+| Agent run/approval 持久化 | [app/agent/store/postgres.py](app/agent/store/postgres.py)、[app/agent/approval/postgres.py](app/agent/approval/postgres.py)、[app/agent/api/assembly.py](app/agent/api/assembly.py) | 默认 `AGENT_STORE=postgres`；`memory` 仅测试；跨连接恢复脚本 `scripts/prove_agent_postgres_recovery.py` |
+| Redis | `docker-compose.yml` redis 服务 | **optional / 未接热路径**；无业务读写 |
 | 固定 RAG（hybrid） | [app/retrieval_strategies/hybrid.py](app/retrieval_strategies/hybrid.py) | 聊天唯一允许的检索策略；RETRIEVAL_METHOD != hybrid 会在 SettingsError 拒绝 |
 | SSE 流式问答 | [app/rag/answering.py](app/rag/answering.py) | 未命中候选时不伪造 sources；上游缺失返回 error 帧 |
 | Agent 工具循环 | [app/agent/loop.py](app/agent/loop.py) | 工具异常 fail-closed，run 失败为可恢复状态而非伪成功 |
 | LangGraph 状态机 | [app/agent/types.py](app/agent/types.py) | 状态边界由不可变 dataclass 强制 |
 | 人工批准 / checkpoint | [app/agent/approval/](app/agent/approval) | 高风险动作暂停等用户批准；Postgres 持久化用 CAS 版本号 |
-| MCP knowledge search | [app/mcp/](app/mcp) | authority_search 在生产环境前 fail-closed，不接入真实权威源 |
+| MCP knowledge search | [app/mcp/](app/mcp) | 默认 knowledge_search；authority_search 默认 offline_fail_closed，live_allowlist 仅 WHO 单源（见 docs/authority-who-verification.md） |
 | 脱敏可观测性 | [app/observability/](app/observability) | query / 回答正文 / 健康 / 密钥永不进入事件或指标 |
 | 缓存策略 | [app/evaluation/cache/](app/evaluation/cache) | default_bypass = true；不以 synthetic 证据声明热路径就绪 |
 | 负载压测 | [app/evaluation/load/](app/evaluation/load) | 工具以 fake-fixed-delay 受控运行，不做生产容量外推 |

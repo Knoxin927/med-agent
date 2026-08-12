@@ -133,14 +133,47 @@ def build_fake_authority_registry() -> AuthoritySourceRegistry:
     )
 
 
-def build_production_authority_registry() -> AuthoritySourceRegistry:
-    """生产 registry：当前缺少独立授权的真实入口，必须启动失败。
+def build_production_authority_registry(
+    mode: str | None = None,
+) -> AuthoritySourceRegistry:
+    """生产 registry：默认 offline fail-closed；live_allowlist 仅登记已核验单源。
 
-    design 要求：未联网核验前不得猜测真实端点或 selector。
-    调用方应捕获并改写为固定 McpAuthorityStartupError。
+    offline_fail_closed：不返回任何生产 entry，启动必须失败。
+    live_allowlist：只启用 WHO（见 docs/authority-who-verification.md）。
+    WHO 搜索页为 JS/CSE 渲染，静态 HTML 常无结果链接；空 hits 是成功空列表，
+    禁止把网页正文无截断塞进 prompt，也禁止搜完直接答。
     """
 
-    raise RuntimeError("production authority entries are not verified")
+    from app.mcp.authority_mode import (
+        DEFAULT_AUTHORITY_SEARCH_MODE,
+        load_authority_search_mode,
+    )
+
+    resolved = DEFAULT_AUTHORITY_SEARCH_MODE if mode is None else mode
+    if mode is None:
+        resolved = load_authority_search_mode()
+    if resolved == "offline_fail_closed":
+        raise RuntimeError("production authority entries are not verified")
+    if resolved != "live_allowlist":
+        raise RuntimeError("production authority entries are not verified")
+
+    sources = [
+        AuthoritySource(
+            source_id="who",
+            source_name="WHO",
+            allowed_domain_suffixes=("who.int",),
+            search_url_template=(
+                "https://www.who.int/home/search-results?"
+                "indexCatalogue=genericsearchindex1&searchQuery={query}&wordsMode=AllWords"
+            ),
+            extractor_id="generic_anchor",
+            verified=True,
+        ),
+    ]
+    return AuthoritySourceRegistry(
+        sources,
+        extractors={"generic_anchor": extract_generic_anchor_hits},
+    )
 
 
 class _AnchorParser(HTMLParser):

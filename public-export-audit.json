@@ -2,7 +2,7 @@
   "audit_scope": "仅扫描 manifest.entries 中的待发布内容；本地审计附属文件不属于候选发布内容集。",
   "audit_version": "public-export-audit-v1",
   "config_version": "public-export-allowlist-v1",
-  "content_file_count": 143,
+  "content_file_count": 148,
   "manifest_file": "public-export-manifest.json",
   "result": "passed",
   "ruleset_id": "public-export-scan-rules-v1",
@@ -125,6 +125,20 @@
         "clean": true,
         "file_kind": "text-code",
         "file_path": "app/agent/approval/reconciliation.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/db/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/agent/db/migrations.py",
         "hits": [],
         "suppressed": []
       },
@@ -698,6 +712,13 @@
       {
         "clean": true,
         "file_kind": "text-code",
+        "file_path": "app/mcp/authority_mode.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
         "file_path": "app/mcp/authority_registry.py",
         "hits": [],
         "suppressed": []
@@ -825,6 +846,20 @@
         "clean": true,
         "file_kind": "text-code",
         "file_path": "app/observability/types.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/ops/__init__.py",
+        "hits": [],
+        "suppressed": []
+      },
+      {
+        "clean": true,
+        "file_kind": "text-code",
+        "file_path": "app/ops/hot_path_log.py",
         "hits": [],
         "suppressed": []
       },
@@ -1011,7 +1046,7 @@
         "suppressed": []
       }
     ],
-    "total_files": 143,
+    "total_files": 148,
     "total_hits": 0,
     "total_suppressed": 0
   }

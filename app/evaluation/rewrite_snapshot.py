@@ -224,31 +224,41 @@ def build_verified_rewrite_snapshot(
 
 # 只从已验证快照精确取回改写，供质量评测保持零联网。
 class SnapshotQueryRewriter:
-    """以原问题精确查找冻结改写结果的纯内存 QueryRewriter。"""
+    """以 case_id 精确查找冻结改写结果，并校验原问题一致性。"""
 
-    # 建立原问题到已验证结果的一对一索引。
+    # 建立 case_id 到已验证结果与原问题的一对一索引。
     def __init__(self, snapshot: VerifiedRewriteSnapshot) -> None:
-        # 重复问题会让精确查找不唯一，不能静默覆盖。
-        questions = [record.question for record in snapshot.records]
-        if len(questions) != len(set(questions)):
-            # 快照构建器正常不会产生此状态，构造器仍保持防御性边界。
-            raise ValueError("rewrite snapshot 包含重复原问题")
+        # 重复 case_id 会让精确查找不唯一，不能静默覆盖。
+        case_ids = [record.case_id for record in snapshot.records]
+        if len(case_ids) != len(set(case_ids)):
+            # 构建器已拒绝重复 case，这里仍保持防御性边界。
+            raise ValueError("rewrite snapshot 包含重复 case_id")
         # 保存只读语义的内部字典，不暴露给调用方。
-        self._results_by_question = {
-            record.question: record.result for record in snapshot.records
+        self._records_by_case_id = {
+            record.case_id: record for record in snapshot.records
         }
 
     # 返回与真实 API rewriter 完全相同的结果对象。
-    def rewrite(self, question: str) -> QueryRewriteResult:
-        """仅接受与快照逐字符一致的原问题。"""
+    def rewrite(
+        self,
+        question: str,
+        *,
+        case_id: str | None = None,
+    ) -> QueryRewriteResult:
+        """仅接受与快照逐字符一致的原问题，且必须提供 case_id。"""
 
-        # 字典查找避免近似匹配或回退为原问题。
-        result = self._results_by_question.get(question)
-        if result is None:
+        # 离线质量评测必须按 case 身份取改写，允许不同 case 共享相同原问题文本。
+        if not isinstance(case_id, str) or not case_id.strip():
+            raise QueryRewriteError("Query 改写快照需要 case_id")
+        record = self._records_by_case_id.get(case_id)
+        if record is None:
             # 缺项时显式失败，证明质量评测没有偷偷联网补全。
-            raise QueryRewriteError("Query 改写快照缺少该原问题")
+            raise QueryRewriteError("Query 改写快照缺少该 case_id")
+        # 原问题仍必须与冻结记录完全一致，防止错绑。
+        if record.question != question:
+            raise QueryRewriteError("Query 改写快照原问题与 case_id 不一致")
         # 返回构建阶段已验证且 usage 只读的原结果对象。
-        return result
+        return record.result
 
 
 # 将完整快照原子发布到不可覆盖的正式目录。

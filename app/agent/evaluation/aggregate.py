@@ -57,10 +57,13 @@ def aggregate_agent_details(details: list[AgentTaskDetail]) -> dict[str, Any]:
     shared = [item for item in details if item.layer == AgentTaskLayer.shared]
     agent_only = [item for item in details if item.layer == AgentTaskLayer.agent_only]
 
-    tool_calls = sum(item.tool_call_count for item in agent_only)
-    tool_successes = sum(item.tool_success_count for item in agent_only)
-    approval_requests = sum(item.approval_request_count for item in agent_only)
-    approval_resumes = sum(item.approval_resume_success_count for item in agent_only)
+    # cancel 任务故意不完成工具/审批恢复；它们只贡献 terminal_status 判定，
+    # 不得进入 tool/approval 分母，否则成功取消会被算成工具失败。
+    rate_eligible = [item for item in agent_only if item.terminal_status != "cancelled"]
+    tool_calls = sum(item.tool_call_count for item in rate_eligible)
+    tool_successes = sum(item.tool_success_count for item in rate_eligible)
+    approval_requests = sum(item.approval_request_count for item in rate_eligible)
+    approval_resumes = sum(item.approval_resume_success_count for item in rate_eligible)
 
     safety = {
         "side_effect_before_approval": sum(item.side_effect_before_approval for item in details),

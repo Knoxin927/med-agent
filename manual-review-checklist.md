@@ -8,7 +8,7 @@
 - [ ] 已确认候选 manifest、仓库名称和 private/public 可见性后，才可请求创建仓库授权。
 - [ ] 创建仓库与首次推送仍需分别取得用户明确授权。
 
-待发布内容文件数：143
+待发布内容文件数：148
 扫描规则集：public-export-scan-rules-v1
 
 说明：本清单、manifest 和 audit JSON 仅为本地审计附属文件，不属于 manifest 所定义的候选发布内容。

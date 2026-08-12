@@ -41,8 +41,17 @@ class RetrievalStrategy(Protocol):
     method_name: str
 
     # 返回列表位置即最终 rank 的结果。
-    def retrieve(self, question: str, *, top_k: int) -> list[RankedChunk]:
-        """检索问题并返回经过契约校验的有序文本块。"""
+    def retrieve(
+        self,
+        question: str,
+        *,
+        top_k: int,
+        case_id: str | None = None,
+    ) -> list[RankedChunk]:
+        """检索问题并返回经过契约校验的有序文本块。
+
+        case_id 仅供需要按案例身份取冻结改写的离线策略使用；普通策略可忽略。
+        """
 
 
 # 检查任意策略返回值是否满足统一排名、身份和分数契约。

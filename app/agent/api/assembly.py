@@ -6,11 +6,13 @@ from typing import Any
 
 # 导入 Agent API 服务与 graph/store/approval 既有端口。
 from app.agent.api.service import AgentApiService
-from app.agent.approval import InMemoryApprovalRepository
+from app.agent.approval import InMemoryApprovalRepository, PostgresApprovalRepository
+from app.agent.db import apply_agent_migrations
 from app.agent.graph.runner import AgentGraphRunner
 from app.agent.model_client import OpenAiToolCallingClient
 from app.agent.search_knowledge_tool import build_search_knowledge_tool_spec
 from app.agent.store import AgentRunCheckpointCoordinator, InMemoryAgentRunStore
+from app.agent.store.postgres import PostgresAgentRunStore
 from app.agent.tool_runtime import ToolRuntime, ToolSpec
 from app.agent.tools.create_follow_up_request import CreateFollowUpRequestService
 from app.agent.types import ApprovalPolicy, ToolCall, ToolEffect, ToolObservation
@@ -79,8 +81,11 @@ def build_local_agent_api_service(
     model: str,
     api_key: str,
     timeout_seconds: float,
+    agent_store: str = "memory",
+    agent_database_dsn: str | None = None,
+    connection_factory: Callable[[str], Any] | None = None,
 ) -> AgentApiService:
-    """用本机内存 store/approval 与真实模型端口装配可注入的 AgentApiService。"""
+    """装配可注入的 AgentApiService；默认 memory，生产通过 settings 切 postgres。"""
 
     # search_knowledge 需要 keyword top_k，与聊天 retrieve(question, top_k) 对齐。
     def tool_retrieve(query: str, *, top_k: int) -> list[RankedChunk]:
@@ -102,18 +107,39 @@ def build_local_agent_api_service(
         timeout_seconds,
         runtime.list_definitions(),
     )
-    # 本机进程内默认使用内存 store/approval；Postgres 路径留给显式依赖注入。
-    store = InMemoryAgentRunStore()
-    repository = InMemoryApprovalRepository()
+
+    connection = None
+    if agent_store == "memory":
+        # 单测与无 DB 演示路径继续使用进程内 store/approval。
+        store = InMemoryAgentRunStore()
+        repository = InMemoryApprovalRepository()
+    elif agent_store == "postgres":
+        if not agent_database_dsn:
+            raise ValueError("postgres 模式需要 agent_database_dsn")
+        # 连接工厂可注入，便于单测替换；生产默认 psycopg.connect。
+        if connection_factory is None:
+            from psycopg import connect as connection_factory  # noqa: PLC0415 - 仅 postgres 路径导入
+        connection = connection_factory(agent_database_dsn)
+        # 启动时幂等迁移，保证 agent_runs / agent_approvals 可用。
+        apply_agent_migrations(connection)
+        store = PostgresAgentRunStore(connection)
+        repository = PostgresApprovalRepository(connection)
+    else:
+        raise ValueError("agent_store 仅允许 memory 或 postgres")
+
     approval = CreateFollowUpRequestService(repository, repository)
     runner = AgentGraphRunner(model_client, runtime, approval_service=approval)
     coordinator = AgentRunCheckpointCoordinator(store, runner)
     service = AgentApiService(store, coordinator, approval_service=approval)
 
     def cleanup() -> None:
-        # 先关 runtime 线程池，再关模型 HTTP 连接，避免测试/进程退出泄漏。
+        # 先关 runtime 线程池，再关模型 HTTP 连接，最后关 DB 连接。
         runtime.close(wait=False)
         model_client.aclose()
+        if connection is not None:
+            closer = getattr(connection, "close", None)
+            if closer is not None:
+                closer()
 
     service.attach_cleanup(cleanup)
     return service

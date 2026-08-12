@@ -119,7 +119,9 @@ def run_hot_evaluation(
         # 预热每一个问题，但不调用 clock、不写入报告排名。
         for case in cases:
             # 统一使用 Top-10，供同一份排名计算 @5 和 @10。
-            warmup_results = strategy.retrieve(case.question, top_k=10)
+            warmup_results = strategy.retrieve(
+                case.question, top_k=10, case_id=case.case_id
+            )
             # 预热也要检查策略没有违反公共结果契约。
             validate_ranked_chunks(
                 warmup_results,
@@ -145,7 +147,9 @@ def run_hot_evaluation(
             # 计时从调用策略前开始，不包含报告写入。
             started_at = clock()
             # 同一题只请求一次 Top-10。
-            results = strategy.retrieve(case.question, top_k=10)
+            results = strategy.retrieve(
+                case.question, top_k=10, case_id=case.case_id
+            )
             # 计时在策略返回后立即停止。
             finished_at = clock()
             # 公共结果契约必须在指标计算前成立。

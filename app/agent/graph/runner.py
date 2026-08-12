@@ -20,7 +20,7 @@ from app.agent.approval.port import ApprovalConflict, ApprovalRequest
 from app.agent.tools.create_follow_up_request import CreateFollowUpRequestService
 from app.agent.graph.state import (
     ActiveSegmentKind, AgentState, PendingToolOutcome, StateTransitionError,
-    append_pending_tool_outcome, complete_active_segment, complete_run, fail_run,
+    append_pending_tool_outcome, cancel_run, complete_active_segment, complete_run, fail_run,
     reserve_external_step, set_pending_call,
 )
 from app.agent.graph.approval import mark_approval_required
@@ -239,7 +239,11 @@ class AgentGraphRunner:
     def _fail(self, data: _GraphInput) -> _GraphInput:
         state = data["state"]
         if state.status.value == "running" and state.terminal_error_code is not None:
-            state = fail_run(state, state.terminal_error_code)
+            # 审批 cancel 必须进入 cancelled 终态，不能被通用 fail 边误写成 failed。
+            if state.terminal_error_code is AgentErrorCode.cancelled:
+                state = cancel_run(state)
+            else:
+                state = fail_run(state, state.terminal_error_code)
         return {"state": state}
 
 

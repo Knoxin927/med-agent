@@ -28,8 +28,8 @@
     {
       "file_kind": "text-doc",
       "rel_path": "README.md",
-      "sha256": "a1ec1e79471fccfbeb5d184776ad94e242c88ffda6669012171d8a9c2459b85e",
-      "size_bytes": 13724
+      "sha256": "b59388f1fb8fad1db8cfaa541d336664917f21838161b29998b5f2a5b7a0f380",
+      "size_bytes": 15320
     },
     {
       "file_kind": "text-code",
@@ -46,8 +46,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/agent/api/assembly.py",
-      "sha256": "71523045c2e76f77bb3591a54c8cf1edf50604b756e78331440145bdc1acaf39",
-      "size_bytes": 4993
+      "sha256": "f4ac7a219db5a729c5f94845ddfd4f1ad98e7e94460b7212d8be762667c06b0d",
+      "size_bytes": 6078
     },
     {
       "file_kind": "text-code",
@@ -64,8 +64,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/agent/api/routes.py",
-      "sha256": "e9a5c9d4ab05290cc1a25d4d73b7b8a5527f53cfdfcc8fe8a4d84d928b6f8550",
-      "size_bytes": 4401
+      "sha256": "52bffccaeb38b1cefc0cfda2a99080710474eb39a74e6d03a754cbc4cb7338a9",
+      "size_bytes": 8096
     },
     {
       "file_kind": "text-code",
@@ -105,6 +105,18 @@
     },
     {
       "file_kind": "text-code",
+      "rel_path": "app/agent/db/__init__.py",
+      "sha256": "c2ff8668d131a8656f0dc15a5b492cf2d426d1f0f938c4c3b3ad00af18e63072",
+      "size_bytes": 189
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/agent/db/migrations.py",
+      "sha256": "aea2093c6822c9742472487315a7ca5e78d59215a68cb4ad001ec20f252c86b4",
+      "size_bytes": 1521
+    },
+    {
+      "file_kind": "text-code",
       "rel_path": "app/agent/evaluation/__init__.py",
       "sha256": "5c7b9a80999f95a84992c3b8462648f51627d967a05578f4f420bc92bb6a40e5",
       "size_bytes": 1297
@@ -112,8 +124,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/agent/evaluation/aggregate.py",
-      "sha256": "2801869ad5a85eed9cc19d342be1bae8de13c628a2a6499c1d65630881b12d63",
-      "size_bytes": 4068
+      "sha256": "4422aaa2623276b3148ff1b9399171f4cb766ecfff6b4c70531d49fa1813cc37",
+      "size_bytes": 4354
     },
     {
       "file_kind": "text-code",
@@ -166,8 +178,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/agent/graph/runner.py",
-      "sha256": "5348cf6a2e4145856f1e3c780e3ef6f92bdaec8ee5e7e0b1a9d5634beae404f8",
-      "size_bytes": 15770
+      "sha256": "c62dfdbd2955af45e3111b6666b22b927db8a0302164bf98df2bc927af5c695a",
+      "size_bytes": 15751
     },
     {
       "file_kind": "text-code",
@@ -184,8 +196,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/agent/messages.py",
-      "sha256": "b5fcb13fd4e8f6a626e36d501e8a1fe049c84694ad3b68725a890a618a26e3a9",
-      "size_bytes": 5486
+      "sha256": "4d02bef8e2d9ed0fb1e1aea49b7273963e57ca00d14b80f4c2635e415a61392b",
+      "size_bytes": 5770
     },
     {
       "file_kind": "text-code",
@@ -526,14 +538,14 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/evaluation/rewrite_snapshot.py",
-      "sha256": "cff169bd28c704d22bedd0906a0cc2456539822e04ac620b3872be845511de1c",
-      "size_bytes": 19586
+      "sha256": "be618b515c8a6685f95c2483107a19494b1f4bf522252fd3c5d2cbf57b6a39ac",
+      "size_bytes": 19660
     },
     {
       "file_kind": "text-code",
       "rel_path": "app/evaluation/runner.py",
-      "sha256": "32ec601f2e545a21df0e9060518601f5245d3aa571608c635c5b5c48a2f60efd",
-      "size_bytes": 18511
+      "sha256": "f87721fdb3a2ca19b19b022a7a19e9aceaf8ba6ffd75a57b482ed729ec2aaef2",
+      "size_bytes": 18239
     },
     {
       "file_kind": "text-code",
@@ -544,8 +556,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/evaluation/worker.py",
-      "sha256": "39f86196c837b75c80f87c615422f2e7bee6661b73963909c5c1f584c380c21f",
-      "size_bytes": 37741
+      "sha256": "6bf23f1012646c28e573a9b1a4c003d691a4b76507752db452e4795eb246cc4a",
+      "size_bytes": 37057
     },
     {
       "file_kind": "text-code",
@@ -562,8 +574,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/main.py",
-      "sha256": "a4e4df361eb95549963ec8bc96e05923c2c40b12d45882c1176add36084b6af1",
-      "size_bytes": 9838
+      "sha256": "1cbda885f8f36f7bf65cdd49a38836e2f005426c5a3187d9e735bce52013d33c",
+      "size_bytes": 13127
     },
     {
       "file_kind": "text-code",
@@ -574,8 +586,8 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/mcp/authority_assembly.py",
-      "sha256": "5c9d07069796a0d025c20e0ca9cac357e40018f7e900b39dec61bad71b9bc69c",
-      "size_bytes": 6178
+      "sha256": "ec846cb2a7ba4dd6cd3eefc07548f505a69117cee8da860e7f0804547cd9a1b1",
+      "size_bytes": 6601
     },
     {
       "file_kind": "text-code",
@@ -591,9 +603,15 @@
     },
     {
       "file_kind": "text-code",
+      "rel_path": "app/mcp/authority_mode.py",
+      "sha256": "6dfd3547637c0cbf60c940c29b2a763f6e03e1532c89686ff21c993a5fe1cb70",
+      "size_bytes": 1188
+    },
+    {
+      "file_kind": "text-code",
       "rel_path": "app/mcp/authority_registry.py",
-      "sha256": "2ff194b7fcf4122148d373d7363411c42ab5333e6a57bff06fa3444e70e44514",
-      "size_bytes": 8362
+      "sha256": "30afaa0181dbc2ec3cae830a95b3af4cbae3157c7900797e06473a60fbb43930",
+      "size_bytes": 9830
     },
     {
       "file_kind": "text-code",
@@ -705,6 +723,18 @@
     },
     {
       "file_kind": "text-code",
+      "rel_path": "app/ops/__init__.py",
+      "sha256": "fee4f09e89756c8c5b14c744ad125a12c744ad672970f02e35cfa297040176a8",
+      "size_bytes": 242
+    },
+    {
+      "file_kind": "text-code",
+      "rel_path": "app/ops/hot_path_log.py",
+      "sha256": "2e4d329677d1bdac55640713056e1df0e2329e257197578c2ca4433b88317691",
+      "size_bytes": 3626
+    },
+    {
+      "file_kind": "text-code",
       "rel_path": "app/rag/__init__.py",
       "sha256": "74dda26785165f1645f964892c68725335d1106e0f3b533c70cba09a2c3432f9",
       "size_bytes": 84
@@ -766,20 +796,20 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/retrieval_strategies/bm25.py",
-      "sha256": "8f5dd6b56ad90b845a2dbd4a7983461ed3199aacebe5d4550b95a29c6220556b",
-      "size_bytes": 12977
+      "sha256": "dfd2f1b69fee7470ff91438e0150cefe39edca3a56cde3cb3e724620751a1c73",
+      "size_bytes": 12797
     },
     {
       "file_kind": "text-code",
       "rel_path": "app/retrieval_strategies/dense.py",
-      "sha256": "c0b751e736e9272a157452b562b3b71c3a1219aa938702ab41b1c0117e06776e",
-      "size_bytes": 2529
+      "sha256": "33ea658ae76d5093477594962d993d02069fca9aa40e001ac3f7d4a66093c60e",
+      "size_bytes": 2565
     },
     {
       "file_kind": "text-code",
       "rel_path": "app/retrieval_strategies/hybrid.py",
-      "sha256": "ea4c6e9926e9a7963142b1b74ab39da15c837dbfe989649565e1c96ff0cd5a45",
-      "size_bytes": 4781
+      "sha256": "f96badbb9a4c92f491b859cee1bd2f1e90434ad7df0cb40b86e329fa934055c8",
+      "size_bytes": 4772
     },
     {
       "file_kind": "text-code",
@@ -790,38 +820,38 @@
     {
       "file_kind": "text-code",
       "rel_path": "app/retrieval_strategies/rewrite.py",
-      "sha256": "2e88a7d151b55006784969475b65f61d873dec7d06a88bb751877dc57c1edca4",
-      "size_bytes": 16873
+      "sha256": "9afbe193546e9b785ef1e241ed30d9601890e5637e3eadc1ca9965eb54c9d477",
+      "size_bytes": 16932
     },
     {
       "file_kind": "text-code",
       "rel_path": "app/retrieval_strategies/types.py",
-      "sha256": "60d8d7a302ad9b26ae71d159ece3216deb6e90938cf19eed4ce93b26ffa3e60d",
-      "size_bytes": 6529
+      "sha256": "59a893316a45207ca48207a15760f03a684140a0484202d3428ae6fad5d8ba34",
+      "size_bytes": 6590
     },
     {
       "file_kind": "text-code",
       "rel_path": "app/settings.py",
-      "sha256": "6c58da6add84e3e70ae3c1578cedcf8c4b5996c12f762aa62da5dd04d9944ea1",
-      "size_bytes": 6267
+      "sha256": "3e10fd1439fcaba4f1f97450d7f249795e3fb62fde447cd6e6aad0837ba1b75a",
+      "size_bytes": 9751
     },
     {
       "file_kind": "structured",
       "rel_path": "docker-compose.yml",
-      "sha256": "58123b9d8d517872b16423f50c014f41492026f278e7efd21fdb3824bc96631d",
-      "size_bytes": 6294
+      "sha256": "2e9f8c011dfc16fb0541b4cf770fe96be2564055d4aceda5e5848a0085eb4e72",
+      "size_bytes": 3705
     },
     {
       "file_kind": "text-doc",
       "rel_path": "docs/PUBLIC_REPRODUCIBILITY.md",
-      "sha256": "b2057f3414cb8e743fd7a9797a9a44630042e60f7f9c7231b77dae5cc121d5f0",
-      "size_bytes": 1221
+      "sha256": "ea454849d516cd6372a622f6aa0f1ffb1d0f05ff6056edcd8633060985d80dbc",
+      "size_bytes": 1663
     },
     {
       "file_kind": "structured",
       "rel_path": "fixtures/public/agent-run-summary.json",
-      "sha256": "0ebead37543a06784811bd4e3345223a888f7fae2f258d5b3cdc632271f78e58",
-      "size_bytes": 3165
+      "sha256": "bc1eff23bb3c28cdd16d4f8dc7ec42d88f08489a60cc8def0cc99219a23ddc06",
+      "size_bytes": 3157
     },
     {
       "file_kind": "structured",
@@ -856,11 +886,11 @@
     {
       "file_kind": "text-code",
       "rel_path": "tests/contract/test_public_contract.py",
-      "sha256": "aa15fac10f3b0fd31682bdc57a80160ba8359667a5c8b128e89031346c22454c",
-      "size_bytes": 2535
+      "sha256": "b2bfa5e9259ac1f5ef78c8e9ab796c9a20e37637606c0fe03b4a03e4812396e3",
+      "size_bytes": 3045
     }
   ],
-  "generated_at": "2026-08-12T08:10:28+00:00",
+  "generated_at": "2026-08-12T17:26:46+00:00",
   "manifest_version": "public-export-manifest-v1",
   "root_name": "med-agent",
   "ruleset_id": "public-export-scan-rules-v1",

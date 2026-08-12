@@ -33,8 +33,16 @@ class HybridRrfRetrievalStrategy:
         self._bm25_strategy = bm25_strategy
 
     # 对问题执行固定候选获取、RRF 累加和稳定截断。
-    def retrieve(self, question: str, *, top_k: int) -> list[RankedChunk]:
+    def retrieve(
+        self,
+        question: str,
+        *,
+        top_k: int,
+        case_id: str | None = None,
+    ) -> list[RankedChunk]:
         """只消费两路 rank，绝不将异量纲 raw score 相加。"""
+
+        del case_id
 
         # 公共调用方只能请求正整数数量。
         if type(top_k) is not int or top_k <= 0:
