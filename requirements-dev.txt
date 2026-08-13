@@ -1,0 +1,8 @@
+# 先安装 API 的运行依赖，保证测试使用与容器相同的 FastAPI 和 Uvicorn 版本。
+-r requirements.txt
+# 固定 pytest 版本，用于自动收集和执行 tests/ 下的测试函数。
+pytest==9.1.1
+# 固定 httpx 版本；FastAPI 的 TestClient 通过它模拟 HTTP 请求。
+httpx==0.28.1
+# 固定 Ruff 版本；它检查新增 Python 文件的基础静态质量。
+ruff==0.12.0

@@ -1,0 +1,18 @@
+# 不把本机真实密码发送进 Docker 构建上下文。
+.env
+# 不把 Git 历史发送进镜像构建上下文。
+.git
+# 不把 pytest 的本机缓存发送进镜像构建上下文。
+.pytest_cache
+# 不把 Ruff 的本机缓存发送进镜像构建上下文。
+.ruff_cache
+# 不把流程设计和审查产物发送进运行镜像。
+.codestable
+# 不把 Python 字节码缓存发送进运行镜像。
+__pycache__
+# 原始资料不进入 API 镜像构建上下文。
+data/raw
+# Chroma 的本地向量库包含原文和派生向量，不进入 API 镜像构建上下文。
+data/chroma
+# M1.2 的本地虚拟环境不应发送到 Docker 构建上下文。
+.venv-m1-2

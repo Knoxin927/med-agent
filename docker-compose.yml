@@ -1,0 +1,107 @@
+# 固定 Compose 项目名；它会影响容器、网络和命名卷的实际名称。
+name: med-agent
+
+# 运行面 profile / 模式（工程运维 D）：
+#   默认（无 profile）= dev-postgres / demo-full：postgres + api，AGENT_STORE=postgres
+#   --profile dev-memory：仅启动 api-memory（AGENT_STORE=memory，不依赖 postgres）
+#   --profile optional-redis：可选 Redis，未接热路径
+# 示例：
+#   docker compose up -d
+#   docker compose --profile demo-full up -d
+#   docker compose --profile dev-memory up -d api-memory
+#   docker compose --profile optional-redis up -d redis
+
+services:
+  # api 是 FastAPI 应用服务；默认 Agent store 走 Postgres，Redis 仍 optional 未接热路径。
+  api:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      LLM_BASE_URL: ${DOCKER_LLM_BASE_URL:-https://api.deepseek.com}
+      LLM_MODEL: ${LLM_MODEL:-deepseek-v4-flash}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-120}
+      RAG_CHROMA_PATH: ${RAG_CHROMA_PATH:-data/chroma}
+      RETRIEVAL_METHOD: ${RETRIEVAL_METHOD:-hybrid}
+      AGENT_STORE: ${AGENT_STORE:-postgres}
+      AGENT_DATABASE_DSN: postgresql://med_agent:${POSTGRES_PASSWORD}@postgres:5432/med_agent
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: med_agent
+      POSTGRES_USER: med_agent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      HOT_PATH_LOG: ${HOT_PATH_LOG:-1}
+      AUTHORITY_SEARCH_MODE: ${AUTHORITY_SEARCH_MODE:-offline_fail_closed}
+    ports:
+      - target: 8000
+        published: "8000"
+        host_ip: 127.0.0.1
+        protocol: tcp
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; response = urlopen('http://127.0.0.1:8000/health'); assert response.status == 200"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # dev-memory：内存 store，不依赖 postgres；端口仍 8000，勿与默认 api 同时起。
+  api-memory:
+    profiles: ["dev-memory"]
+    build: .
+    environment:
+      LLM_BASE_URL: ${DOCKER_LLM_BASE_URL:-https://api.deepseek.com}
+      LLM_MODEL: ${LLM_MODEL:-deepseek-v4-flash}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-120}
+      RAG_CHROMA_PATH: ${RAG_CHROMA_PATH:-data/chroma}
+      RETRIEVAL_METHOD: ${RETRIEVAL_METHOD:-hybrid}
+      AGENT_STORE: memory
+      HOT_PATH_LOG: ${HOT_PATH_LOG:-1}
+      AUTHORITY_SEARCH_MODE: ${AUTHORITY_SEARCH_MODE:-offline_fail_closed}
+    ports:
+      - target: 8000
+        published: "8000"
+        host_ip: 127.0.0.1
+        protocol: tcp
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; response = urlopen('http://127.0.0.1:8000/health'); assert response.status == 200"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: med_agent
+      POSTGRES_USER: med_agent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - target: 5432
+        published: "5433"
+        host_ip: 127.0.0.1
+        protocol: tcp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    profiles: ["optional-redis"]
+    image: redis:7
+    ports:
+      - target: 6379
+        published: "6379"
+        host_ip: 127.0.0.1
+        protocol: tcp
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  postgres_data:
